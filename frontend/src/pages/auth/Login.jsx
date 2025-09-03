@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate(); 
   const [selectedRole, setSelectedRole] = useState('student');
   const [formData, setFormData] = useState({
     email: '',
@@ -21,6 +23,13 @@ function Login() {
     console.log('Login attempt:', { role: selectedRole, ...formData });
     // Handle login logic here
   };
+  
+  const onclickHandler = (e) => {
+    e.preventDefault();
+    console.log("Login attempt:", { role: selectedRole, ...formData });
+    navigate("/");
+  };
+
 
   const roleConfig = {
     student: {
@@ -188,6 +197,7 @@ function Login() {
                       e.target.style.transform = 'translateY(0)';
                       e.target.classList.remove('shadow');
                     }}
+                    onClick={onclickHandler}
                   >
                     Login as {selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}
                   </button>
