@@ -26,6 +26,9 @@ const login = async(req, res) => {
 
             return res.status(httpStatus.OK).json({ token: token });
         }
+        else{
+            return res.status(httpStatus.UNAUTHORIZED).json({message: "Invalid Usename Or Password"});
+        }
 
     } catch (error) {
         return res.status(500).json({ message: `Something went wrong : ${error}`});
