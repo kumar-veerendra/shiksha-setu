@@ -1,191 +1,168 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 const StudentNavbar = () => {
     return (
-        <nav
-            className="navbar navbar-expand-lg navbar-light shadow-lg sticky-top"
-            style={{
-                background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffcc02 100%)',
-                borderBottom: '4px solid #d4af37'
-            }}
-        >
-            <div className="container">
-                {/* Brand / Logo */}
-                <Link className="navbar-brand fw-bold d-flex align-items-center" to="/dashboard" style={{ color: '#8B4513' }}>
-                    <div className="d-flex align-items-center">
-                        {/* Emblem as an icon-like image */}
-                        <img
-                            src="emblem.png"
-                            alt="Rajasthan Emblem"
-                            style={{
-                                width: '60px',
-                                height: '60px',
-                                marginRight: '10px',
-                                verticalAlign: 'middle'
-                            }}
-                        />
+        <>
+            <style jsx>{`
+                .modern-navbar {
+                    background: linear-gradient(90deg, #ff6a00, #ee0979);
+                    border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+                    backdrop-filter: blur(20px);
+                    transition: all 0.3s ease;
+                }
 
-                        <div>
-                            <div style={{ fontSize: '18px', lineHeight: '1.2', color: '#8B4513', fontWeight: 'bold' }}>
-                                Government of Rajasthan
-                            </div>
-                            <div style={{ fontSize: '12px', lineHeight: '1.2', color: '#6178a3ff', fontWeight: 'bold' }}>
-                                Child Welfare Department
-                            </div>
+                .navbar-brand:hover {
+                    transform: scale(1.05);
+                    transition: all 0.3s ease;
+                }
+
+                .logo-icon {
+                    width: 50px;
+                    height: 50px;
+                    background: linear-gradient(45deg, #1565C0, #0D47A1);
+                    border-radius: 15px;
+                    border: 2px solid rgba(255, 255, 255, 0.3);
+                    box-shadow: 0 8px 25px rgba(21, 101, 192, 0.3);
+                    transition: all 0.3s ease;
+                }
+
+                .nav-link-modern {
+                    color: white !important;
+                    border-radius: 20px;
+                    transition: all 0.3s ease;
+                    font-weight: 600;
+                    font-size: 13px;
+                }
+
+                .nav-link-modern:hover {
+                    background: rgba(255, 255, 255, 0.2) !important;
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(33, 150, 243, 0.3);
+                    color: white !important;
+                }
+
+                .badge-modern {
+                    background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+                    border-radius: 12px;
+                    font-size: 10px;
+                    font-weight: 600;
+                }
+
+                .dropdown-menu-modern {
+                    border-radius: 20px;
+                    background: rgba(255, 255, 255, 0.98);
+                    backdrop-filter: blur(20px);
+                    box-shadow: 0 20px 40px rgba(33, 150, 243, 0.2);
+                    border: 1px solid rgba(33, 150, 243, 0.1);
+                    margin-top: 10px;
+                }
+
+                .dropdown-item-modern {
+                    color: #1565C0;
+                    border-radius: 15px;
+                    margin: 5px 10px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                }
+
+                .dropdown-item-modern:hover {
+                    background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(33, 203, 243, 0.05));
+                    transform: translateX(5px);
+                    color: #1565C0;
+                }
+
+                .logout-item:hover {
+                    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+                    color: #dc3545;
+                }
+
+                .navbar-toggler-modern {
+                    background: rgba(255, 255, 255, 0.2);
+                    border-radius: 10px;
+                    border: none;
+                }
+
+                .brand-text {
+                    font-family: "Segoe UI", sans-serif;
+                    font-weight: 700;
+                    font-size: 20px;
+                    color: white;
+                }
+
+                .brand-subtext {
+                    font-size: 11px;
+                    color: rgba(255, 255, 255, 0.8);
+                    font-weight: 500;
+                }
+            `}</style>
+
+            <nav className="navbar navbar-expand-lg navbar-light shadow-lg sticky-top modern-navbar">
+                <div className="container">
+                    {/* Brand */}
+                    <a className="navbar-brand fw-bold d-flex align-items-center text-decoration-none" href="/dashboard">
+                        <div className="logo-icon d-flex align-items-center justify-content-center me-3">
+                            <i className="bi bi-mortarboard-fill text-white" style={{fontSize: '20px'}}></i>
                         </div>
-                    </div>
-                </Link>
+                        <div>
+                            <div className="brand-text">Shiksha Setu</div>
+                            <div className="brand-subtext">Government of Rajasthan - Child Welfare Department</div>
+                        </div>
+                    </a>
 
-                {/* Toggler for mobile view */}
-                <button
-                    className="navbar-toggler border-2"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#studentNavbar"
-                    aria-controls="studentNavbar"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                    style={{ borderColor: '#8B4513' }}
-                >
-                    <span style={{
-                        backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%238B4513' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e")`
-                    }}></span>
-                </button>
+                    {/* Mobile Toggle */}
+                    <button className="navbar-toggler navbar-toggler-modern" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <i className="bi bi-list text-white fs-5"></i>
+                    </button>
 
-                {/* Navbar links */}
-                <div className="collapse navbar-collapse" id="studentNavbar">
-                    <ul className="navbar-nav ms-auto align-items-lg-center" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-
-                        {/* Dashboard */}
-                        <li className="nav-item position-relative mx-2">
-                            <Link
-                                className="nav-link fw-semibold text-uppercase position-relative px-3 py-2 rounded-pill"
-                                to="/dashboard"
-                                style={{
-                                    fontSize: '13px',
-                                    textDecoration: 'none',
-                                    color: '#8B4513',
-                                    transition: 'all 0.3s ease',
-                                    border: '2px solid transparent'
-                                }}
-                            >
-                                <i className="bi bi-speedometer2 me-1"></i>
-                                Dashboard
-                            </Link>
-                        </li>
-
-                        {/* Courses */}
-                        <li className="nav-item position-relative mx-2">
-                            <Link
-                                className="nav-link fw-semibold text-uppercase position-relative px-3 py-2 rounded-pill"
-                                to="/courses"
-                                style={{
-                                    fontSize: '13px',
-                                    textDecoration: 'none',
-                                    color: '#8B4513',
-                                    transition: 'all 0.3s ease',
-                                    border: '2px solid transparent'
-                                }}
-                            >
-                                <i className="bi bi-book me-1"></i>
-                                Courses
-                            </Link>
-                        </li>
-
-                        {/* Assignments */}
-                        <li className="nav-item position-relative mx-2">
-                            <Link
-                                className="nav-link fw-semibold text-uppercase position-relative px-3 py-2 rounded-pill d-flex align-items-center"
-                                to="/assignments"
-                                style={{
-                                    fontSize: '13px',
-                                    textDecoration: 'none',
-                                    color: '#8B4513',
-                                    transition: 'all 0.3s ease',
-                                    border: '2px solid transparent'
-                                }}
-                            >
-                                <i className="bi bi-clipboard-check me-1"></i>
-                                Assignments
-                                <span className="badge ms-2" style={{ backgroundColor: '#d4af37', color: '#8B4513', fontSize: '10px' }}>3</span>
-                            </Link>
-                        </li>
-
-                        {/* Dropdown Menu (More) */}
-                        <li className="nav-item dropdown position-relative mx-2">
-                            <a
-                                className="nav-link dropdown-toggle fw-semibold text-uppercase position-relative px-3 py-2 rounded-pill d-flex align-items-center"
-                                href="#"
-                                role="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                                style={{
-                                    fontSize: '13px',
-                                    textDecoration: 'none',
-                                    color: '#8B4513',
-                                    transition: 'all 0.3s ease',
-                                    border: '2px solid transparent'
-                                }}
-                            >
-                                <i className="bi bi-person-circle me-1"></i>
-                                More
-                            </a>
-                            <ul className="dropdown-menu dropdown-menu-end shadow-lg border-2" style={{
-                                borderRadius: '15px',
-                                overflow: 'hidden',
-                                borderColor: '#d4af37',
-                                background: 'linear-gradient(135deg, #fff8dc 0%, #ffeaa7 100%)'
-                            }}>
-                                {/* Attendance */}
-                                <li>
-                                    <Link className="dropdown-item py-2 px-3 d-flex align-items-center fw-medium" to="/attendance">
-                                        <i className="bi bi-calendar-check me-2" style={{ color: '#ff6b35' }}></i>
-                                        Attendance
-                                    </Link>
-                                </li>
-
-                                {/* Exams & Results */}
-                                <li>
-                                    <Link className="dropdown-item py-2 px-3 d-flex align-items-center fw-medium" to="/exams">
-                                        <i className="bi bi-clipboard-data me-2" style={{ color: '#f7931e' }}></i>
-                                        Exams & Results
-                                    </Link>
-                                </li>
-
-                                {/* Messages/Forum */}
-                                <li>
-                                    <Link className="dropdown-item py-2 px-3 d-flex align-items-center fw-medium position-relative" to="/messages">
-                                        <i className="bi bi-chat-dots me-2" style={{ color: '#ffcc02' }}></i>
+                    {/* Navigation Links */}
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav ms-auto">
+                            <li className="nav-item mx-1">
+                                <a className="nav-link nav-link-modern px-4 py-2 text-uppercase" href="/dashboard">
+                                    <i className="bi bi-speedometer2 me-2"></i>Dashboard
+                                </a>
+                            </li>
+                            <li className="nav-item mx-1">
+                                <a className="nav-link nav-link-modern px-4 py-2 text-uppercase" href="/courses">
+                                    <i className="bi bi-book me-2"></i>Courses
+                                </a>
+                            </li>
+                            <li className="nav-item mx-1">
+                                <a className="nav-link nav-link-modern px-4 py-2 text-uppercase d-flex align-items-center" href="/assignments">
+                                    <i className="bi bi-clipboard-check me-2"></i>Assignments
+                                    <span className="badge badge-modern ms-2 px-2 py-1">3</span>
+                                </a>
+                            </li>
+                            <li className="nav-item dropdown mx-1">
+                                <a className="nav-link nav-link-modern dropdown-toggle px-4 py-2 text-uppercase" href="#" data-bs-toggle="dropdown">
+                                    <i className="bi bi-person-circle me-2"></i>More
+                                </a>
+                                <ul className="dropdown-menu dropdown-menu-end dropdown-menu-modern">
+                                    <li><a className="dropdown-item dropdown-item-modern py-3 px-4" href="/attendance">
+                                        <i className="bi bi-calendar-check me-3 text-primary"></i>Attendance
+                                    </a></li>
+                                    <li><a className="dropdown-item dropdown-item-modern py-3 px-4" href="/exams">
+                                        <i className="bi bi-clipboard-data me-3" style={{color: '#21CBF3'}}></i>Exams & Results
+                                    </a></li>
+                                    <li><a className="dropdown-item dropdown-item-modern py-3 px-4 d-flex align-items-center" href="/messages">
+                                        <i className="bi bi-chat-dots me-3" style={{color: '#667eea'}}></i>
                                         Messages/Forum
-                                        <span className="badge ms-auto" style={{ backgroundColor: '#ff6b35', color: 'white', fontSize: '10px' }}>2</span>
-                                    </Link>
-                                </li>
-
-                                <li><hr className="dropdown-divider my-1" style={{ borderColor: '#d4af37' }} /></li>
-
-                                {/* Profile/Settings */}
-                                <li>
-                                    <Link className="dropdown-item py-2 px-3 d-flex align-items-center fw-medium" to="/profile">
-                                        <i className="bi bi-gear me-2" style={{ color: '#8B4513' }}></i>
-                                        Profile & Settings
-                                    </Link>
-                                </li>
-
-                                {/* Logout */}
-                                <li>
-                                    <Link className="dropdown-item py-2 px-3 d-flex align-items-center fw-medium" to="/logout" style={{ color: '#dc3545' }}>
-                                        <i className="bi bi-box-arrow-right me-2"></i>
-                                        Logout
-                                    </Link>
-                                </li>
-                            </ul>
-                        </li>
-
-                    </ul>
+                                        <span className="badge badge-modern ms-auto px-2 py-1">2</span>
+                                    </a></li>
+                                    <li><hr className="dropdown-divider mx-3 my-2" style={{borderColor: 'rgba(33, 150, 243, 0.2)'}} /></li>
+                                    <li><a className="dropdown-item dropdown-item-modern py-3 px-4" href="/profile">
+                                        <i className="bi bi-gear me-3 text-primary"></i>Profile & Settings
+                                    </a></li>
+                                    <li><a className="dropdown-item dropdown-item-modern logout-item py-3 px-4 text-danger" href="/logout">
+                                        <i className="bi bi-box-arrow-right me-3"></i>Logout
+                                    </a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </>
     );
 };
 
