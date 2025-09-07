@@ -1,21 +1,66 @@
 import React from 'react';
 import "../App.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function LandingPage() {
+    const navigate = useNavigate();
+
+    const handleGuest = () => {
+        // Generate a random 4-digit number
+        const randomId = Math.floor(1000 + Math.random() * 9000);
+        navigate(`/${randomId}`);
+    };
+
     return ( 
-        <div className='landingPageContainer'>
-            <nav>
+        <div className='landingPageContainer '>
+            <nav style={{ backgroundColor: "white" }} className='border-bottom'>
                 <div className='navHeader'>
-                    <h2>Shiksha Setu</h2>
+                    <h2><span style={{ color: "#FF9839" }}>Shiksha Setu</span></h2>
                 </div>
 
-                <div className='navList'>
-                    <p>Join as Guest</p>
-                    <p>Register</p>
-                    <div role='button'>
-                        <p>Login</p>
+                <div className='navList' style={{ display: "flex", gap: "1rem" }}>
+                    {/* Join as Guest */}
+                    <div 
+                        role='button'
+                        onClick={handleGuest}
+                        style={{ 
+                            backgroundColor: "black", 
+                            color: "white", 
+                            padding: "0.5rem 1rem", 
+                            borderRadius: "0.25rem", 
+                            cursor: "pointer"
+                        }}
+                    >
+                        Join as Guest
                     </div>
+
+                    {/* Register button */}
+                    <Link 
+                        to="/login?role=student" 
+                        style={{ 
+                            backgroundColor: "black", 
+                            color: "white", 
+                            padding: "0.5rem 1rem", 
+                            borderRadius: "0.25rem", 
+                            textDecoration: "none" 
+                        }}
+                    >
+                        Register
+                    </Link>
+
+                    {/* Student Login button */}
+                    <Link 
+                        to="/login?role=student" 
+                        style={{ 
+                            backgroundColor: "black", 
+                            color: "white", 
+                            padding: "0.5rem 1rem", 
+                            borderRadius: "0.25rem", 
+                            textDecoration: "none" 
+                        }}
+                    >
+                        Login
+                    </Link>
                 </div>
             </nav>
 
@@ -34,7 +79,7 @@ function LandingPage() {
                 </div>
             </div>
         </div>
-     );
+    );
 }
 
 export default LandingPage;

@@ -10,8 +10,13 @@ import StudentPage from "./layouts/student/StudentPage";
 import TeacherPage from "./layouts/teacher/TeacherPage";
 import StudClassroom from "./layouts/student/StudClassroom";
 import VideoMeet from "./pages/VideoMeet";
+import ProtectedRoute from "./ProtectedRoute";
+
+import { useAuth } from "./context/AuthContext";
 
 function App() {
+    const { userData } = useAuth(); // ✅ get current user
+
   return (
     <>
       <Routes>
@@ -22,9 +27,27 @@ function App() {
         <Route path="/login" element={<Authentication />} />
         <Route path="/register" element={<Signup />} />
         <Route path="/online-classroom" element={<LandingPage />} />
-        <Route path="/student-dashboard" element={<StudentPage />} />
+        {/* <Route path="/student-dashboard" element={<StudentPage />} /> */}
         {/* <Route path="/Student-classroom" element={<StudClassroom />} /> */}
-        <Route path="/teacher-dashboard" element={<TeacherPage />} />
+        <Route 
+          path="/student-dashboard" 
+          element={
+            <ProtectedRoute role="student" user={userData}>
+              <StudentPage />
+            </ProtectedRoute>
+          } 
+        />
+
+         {/* Teacher route protected */}
+        <Route
+        path="/teacher-dashboard"
+        element={
+          <ProtectedRoute role="teacher" user={userData}>
+            <TeacherPage />
+          </ProtectedRoute>
+        }
+      />
+
         <Route path="/:url" element={<VideoMeet />} />
       </Routes>
     </>

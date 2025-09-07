@@ -466,7 +466,7 @@ function Navbar() {
                   className="btn login-btn-custom"
                   style={navbarStyles.loginBtn}
                 >
-                  <i className="fas fa-sign-in-alt me-2"></i>Student Login
+                  <i className="fas fa-sign-in-alt me-2"></i> Login
                 </Link>
               </li>
 
