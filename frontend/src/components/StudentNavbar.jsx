@@ -4,6 +4,7 @@ const StudentNavbar = () => {
     return (
         <>
             <style jsx>{`
+
                 .modern-navbar {
                     background: linear-gradient(90deg, #ff6a00, #ee0979);
                     border-bottom: 3px solid rgba(255, 255, 255, 0.2);
@@ -16,14 +17,11 @@ const StudentNavbar = () => {
                     transition: all 0.3s ease;
                 }
 
-                .logo-icon {
-                    width: 50px;
-                    height: 50px;
-                    background: linear-gradient(45deg, #1565C0, #0D47A1);
-                    border-radius: 15px;
-                    border: 2px solid rgba(255, 255, 255, 0.3);
-                    box-shadow: 0 8px 25px rgba(21, 101, 192, 0.3);
+                .logo-image {
+                    width: 120px;
+                    height: 120px;
                     transition: all 0.3s ease;
+                    object-fit: contain;
                 }
 
                 .nav-link-modern {
@@ -100,9 +98,11 @@ const StudentNavbar = () => {
                 <div className="container">
                     {/* Brand */}
                     <a className="navbar-brand fw-bold d-flex align-items-center text-decoration-none" href="/dashboard">
-                        <div className="logo-icon d-flex align-items-center justify-content-center me-3">
-                            <i className="bi bi-mortarboard-fill text-white" style={{fontSize: '20px'}}></i>
-                        </div>
+                        <img
+                            src="/projectLogo.png"
+                            alt="Shiksha Setu Logo"
+                            className="logo-image me-3"
+                        />
                         <div>
                             <div className="brand-text">Shiksha Setu</div>
                             <div className="brand-subtext">Government of Rajasthan - Child Welfare Department</div>
@@ -115,7 +115,7 @@ const StudentNavbar = () => {
                     </button>
 
                     {/* Navigation Links */}
-                    <div className="collapse navbar-collapse" id="navbarNav">
+                    <div className="navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav ms-auto">
                             <li className="nav-item mx-1">
                                 <a className="nav-link nav-link-modern px-4 py-2 text-uppercase" href="/dashboard">
@@ -142,14 +142,14 @@ const StudentNavbar = () => {
                                         <i className="bi bi-calendar-check me-3 text-primary"></i>Attendance
                                     </a></li>
                                     <li><a className="dropdown-item dropdown-item-modern py-3 px-4" href="/exams">
-                                        <i className="bi bi-clipboard-data me-3" style={{color: '#21CBF3'}}></i>Exams & Results
+                                        <i className="bi bi-clipboard-data me-3" style={{ color: '#21CBF3' }}></i>Exams & Results
                                     </a></li>
                                     <li><a className="dropdown-item dropdown-item-modern py-3 px-4 d-flex align-items-center" href="/messages">
-                                        <i className="bi bi-chat-dots me-3" style={{color: '#667eea'}}></i>
+                                        <i className="bi bi-chat-dots me-3" style={{ color: '#667eea' }}></i>
                                         Messages/Forum
                                         <span className="badge badge-modern ms-auto px-2 py-1">2</span>
                                     </a></li>
-                                    <li><hr className="dropdown-divider mx-3 my-2" style={{borderColor: 'rgba(33, 150, 243, 0.2)'}} /></li>
+                                    <li><hr className="dropdown-divider mx-3 my-2" style={{ borderColor: 'rgba(33, 150, 243, 0.2)' }} /></li>
                                     <li><a className="dropdown-item dropdown-item-modern py-3 px-4" href="/profile">
                                         <i className="bi bi-gear me-3 text-primary"></i>Profile & Settings
                                     </a></li>

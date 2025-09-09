@@ -14,13 +14,13 @@ function Footer() {
             <div className="mb-4">
               <div className="d-flex align-items-center mb-3">
                 <img 
-                  src="/shiksha-setuLogo.png" 
+                  src="/projectLogo.png" 
                   alt="Shiksha Setu Logo" 
                   className="me-2"
                   style={{
                     height: '100px',
                     width: 'auto',
-                    filter: 'brightness(0) invert(1)'
+                    
                   }}
                 />
                 <h4 className="text-white fw-bold mb-0">Shiksha Setu</h4>

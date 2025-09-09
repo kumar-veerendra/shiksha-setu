@@ -31,7 +31,7 @@ const StudentDashboard = () => {
           <div className="row align-items-center">
             <div className="col-md-8">
               <div className="d-flex align-items-center mb-2">
-                <div 
+                {/* <div 
                   className="me-3 d-flex align-items-center justify-content-center"
                   style={{
                     width: '60px',
@@ -47,20 +47,13 @@ const StudentDashboard = () => {
                   onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
                 >
                   <i className="bi bi-mortarboard-fill" style={{ fontSize: '24px', color: 'white' }}></i>
-                </div>
-                <div>
-                  <h2 style={{ color: 'white', marginBottom: '0', fontSize: '28px', fontWeight: '600' }}>
-                    Shiksha Setu
-                  </h2>
-                  <p style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: '0', fontSize: '14px' }}>
-                    Government of Rajasthan - Child Welfare Department
-                  </p>
-                </div>
+                </div> */}
+                
               </div>
-              <h4 style={{ color: 'white', marginBottom: '5px', fontWeight: '500' }}>
+              <h1 style={{ color: 'white', marginBottom: '5px', fontWeight: '500',fontSize:'2rem' }}>
                 Welcome, Rahul Sharma
-              </h4>
-              <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '14px', marginBottom: '0' }}>
+              </h1>
+              <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '20+px', marginBottom: '0' }}>
                 Class 10th - Mathematics & Science
               </p>
             </div>
