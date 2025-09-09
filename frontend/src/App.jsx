@@ -43,8 +43,11 @@ function App() {
           element={user?.role === "teacher" ? <TeacherDashboard /> : <Login setUser={setUser} />}
         />
       </Routes>
+      <PublicDashboard/>
 
       {!hideNavbarFooter && <Footer />}
     </>
   );
 }
+
+export default App
