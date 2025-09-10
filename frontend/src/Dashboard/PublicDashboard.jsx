@@ -14,10 +14,10 @@ const PublicDashboard = () => {
                     <div className="row align-items-center">
                         <div className="col-lg-6">
                             <h1 style={{ fontSize: '3rem', fontWeight: '700', marginBottom: '20px' }}>
-                                Transforming Education in Rajasthan
+                                Empowering Digital Learning Across India
                             </h1>
                             <p style={{ fontSize: '1.2rem', marginBottom: '30px', opacity: '0.9' }}>
-                                Shiksha Setu connects students, teachers, and parents with a comprehensive digital learning platform powered by the Government of Rajasthan.
+                                Shiksha Setu connects students, teachers, and parents with a comprehensive digital learning platform that bridges traditional education with modern technology.
                             </p>
                             <div className="d-flex justify-content-center gap-3 flex-wrap">
                                 <button style={{
@@ -61,8 +61,8 @@ const PublicDashboard = () => {
                         </div>
                         <div className="col-lg-6 mt-5 mt-lg-0">
                             <img 
-                                src="https://images.unsplash.com/photo-1522881193457-37ae97c905bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                                alt="Education" 
+                                src="/digiLearn.jpg" 
+                                alt="Indian students in classroom" 
                                 style={{
                                     width: '100%',
                                     borderRadius: '20px',
@@ -82,7 +82,7 @@ const PublicDashboard = () => {
                             Platform Features
                         </h2>
                         <p style={{ fontSize: '1.1rem', color: '#666', maxWidth: '700px', margin: '0 auto' }}>
-                            Discover how Shiksha Setu enhances the learning experience for students, teachers, and parents across Rajasthan
+                            Discover how Shiksha Setu enhances the learning experience for students, teachers, and parents across India
                         </p>
                     </div>
 
@@ -179,15 +179,15 @@ const PublicDashboard = () => {
                 </div>
             </section>
 
-            {/* Testimonials */}
+            {/* Success Stories Section */}
             <section style={{ padding: '80px 0' }}>
                 <div className="container">
                     <div className="text-center mb-5">
                         <h2 style={{ fontWeight: '700', color: '#333', marginBottom: '20px' }}>
-                            What Users Say
+                            Success Stories
                         </h2>
                         <p style={{ fontSize: '1.1rem', color: '#666', maxWidth: '700px', margin: '0 auto' }}>
-                            Hear from students, teachers, and parents about their experience with Shiksha Setu
+                            Real experiences from our community showcasing how Shiksha Setu is making a difference in education
                         </p>
                     </div>
 
@@ -195,27 +195,29 @@ const PublicDashboard = () => {
                         {[
                             {
                                 name: 'Rajesh Kumar',
-                                role: 'Parent',
-                                text: 'Shiksha Setu has made it so easy to track my child\'s progress and communicate with teachers.',
-                                avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+                                role: 'Parent from Delhi',
+                                text: 'My daughter\'s grades improved significantly after we started using Shiksha Setu. The progress tracking feature helps me stay involved in her learning journey.',
+                                achievement: 'Daughter scored 95% in Class 10'
                             },
                             {
                                 name: 'Priya Sharma',
-                                role: 'Teacher',
-                                text: 'The resources and tools available have transformed how I teach and engage with my students.',
-                                avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+                                role: 'Government School Teacher',
+                                text: 'The digital resources have transformed my classroom. Students are more engaged, and I can create interactive lessons that make learning fun and effective.',
+                                achievement: 'Class attendance increased by 40%'
                             },
                             {
-                                name: 'Aarav Mehta',
-                                role: 'Student',
-                                text: 'I love the interactive lessons and being able to access my study materials anytime.',
-                                avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+                                name: 'Arjun Patel',
+                                role: 'Class 12 Student',
+                                text: 'Preparing for JEE became easier with Shiksha Setu. The practice tests and video lectures helped me understand complex concepts better.',
+                                achievement: 'JEE Main rank under 5000'
                             }
-                        ].map((testimonial, index) => (
+                        ].map((story, index) => (
                             <div className="col-md-4 mb-4" key={index}>
                                 <div className="card h-100 border-0 shadow-sm" style={{ 
                                     borderRadius: '15px', 
-                                    transition: 'all 0.3s ease'
+                                    transition: 'all 0.3s ease',
+                                    position: 'relative',
+                                    overflow: 'hidden'
                                 }} onMouseEnter={(e) => {
                                     e.currentTarget.style.transform = 'translateY(-5px)';
                                     e.currentTarget.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
@@ -223,25 +225,28 @@ const PublicDashboard = () => {
                                     e.currentTarget.style.transform = 'translateY(0)';
                                     e.currentTarget.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.05)';
                                 }}>
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        height: '4px',
+                                        background: 'linear-gradient(90deg, #667eea, #764ba2)'
+                                    }}></div>
                                     <div className="card-body p-4">
-                                        <div className="d-flex align-items-center mb-4">
-                                            <img 
-                                                src={testimonial.avatar} 
-                                                alt={testimonial.name} 
-                                                style={{
-                                                    width: '60px',
-                                                    height: '60px',
-                                                    borderRadius: '50%',
-                                                    objectFit: 'cover',
-                                                    marginRight: '15px'
-                                                }}
-                                            />
-                                            <div>
-                                                <h6 style={{ fontWeight: '600', marginBottom: '5px', color: '#333' }}>{testimonial.name}</h6>
-                                                <p style={{ color: '#666', margin: '0', fontSize: '0.9rem' }}>{testimonial.role}</p>
-                                            </div>
+                                        <div className="mb-3">
+                                            <h6 style={{ fontWeight: '600', marginBottom: '5px', color: '#333' }}>{story.name}</h6>
+                                            <p style={{ color: '#666', margin: '0', fontSize: '0.9rem' }}>{story.role}</p>
                                         </div>
-                                        <p style={{ color: '#666', fontStyle: 'italic' }}>"{testimonial.text}"</p>
+                                        <p style={{ color: '#666', fontStyle: 'italic', marginBottom: '15px' }}>"{story.text}"</p>
+                                        <div style={{
+                                            background: '#f8f9fa',
+                                            borderRadius: '8px',
+                                            padding: '10px',
+                                            borderLeft: '3px solid #667eea'
+                                        }}>
+                                            <small style={{ color: '#667eea', fontWeight: '600' }}>Achievement: {story.achievement}</small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -262,7 +267,7 @@ const PublicDashboard = () => {
                         Ready to Get Started?
                     </h2>
                     <p style={{ fontSize: '1.2rem', marginBottom: '40px', maxWidth: '700px', marginLeft: 'auto', marginRight: 'auto', opacity: '0.9' }}>
-                        Join thousands of students, teachers, and parents already using Shiksha Setu to transform education in Rajasthan
+                        Experience the future of education with our innovative platform designed to bridge the digital divide and enhance learning outcomes
                     </p>
                     <div className="d-flex justify-content-center gap-3 flex-wrap">
                         <button style={{

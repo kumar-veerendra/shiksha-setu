@@ -123,8 +123,8 @@ const StudentNavbar = () => {
                                 </a>
                             </li>
                             <li className="nav-item mx-1">
-                                <a className="nav-link nav-link-modern px-4 py-2 text-uppercase" href="/courses">
-                                    <i className="bi bi-book me-2"></i>Courses
+                                <a className="nav-link nav-link-modern px-4 py-2 text-uppercase" href="/classes">
+                                    <i className="bi bi-book me-2"></i>Classes
                                 </a>
                             </li>
                             <li className="nav-item mx-1">

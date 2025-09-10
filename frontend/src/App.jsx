@@ -27,7 +27,7 @@ function App() {
 
   return (
     <>
-      {!hideNavbarFooter && <PublicNavbar />}
+      {!hideNavbarFooter && <StudentNavbar />}
 
       <Routes>
         <Route path="/" element={<HomePage />} />
