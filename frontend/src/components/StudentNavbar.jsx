@@ -18,8 +18,8 @@ const StudentNavbar = () => {
                 }
 
                 .logo-image {
-                    width: 120px;
-                    height: 120px;
+                    width: auto;
+                    height: 100px;
                     transition: all 0.3s ease;
                     object-fit: contain;
                 }
@@ -29,7 +29,7 @@ const StudentNavbar = () => {
                     border-radius: 20px;
                     transition: all 0.3s ease;
                     font-weight: 600;
-                    font-size: 13px;
+                    font-size: 16px;
                 }
 
                 .nav-link-modern:hover {

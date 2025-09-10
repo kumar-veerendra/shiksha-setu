@@ -20,7 +20,7 @@ const PublicNavbar = () => {
                 }
                 
                 .logo-image {
-                    width: 100px;
+                    width: auto;
                     height: 100px;
                     transition: all 0.3s ease;
                     object-fit: contain;

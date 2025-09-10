@@ -106,7 +106,7 @@ const StudentDashboard = () => {
               <div className="card-body text-center p-4">
                 <i className="bi bi-book-fill mb-3" style={{ fontSize: '3rem' }}></i>
                 <h3 className="mb-2" style={{ fontWeight: '700' }}>8</h3>
-                <p className="mb-0" style={{ fontSize: '14px', opacity: '0.9' }}>Active Courses</p>
+                <p className="mb-0" style={{ fontSize: '14px', opacity: '0.9' }}>Active Classes</p>
               </div>
             </div>
           </div>
@@ -213,7 +213,7 @@ const StudentDashboard = () => {
               >
                 <h5 className="mb-0" style={{ fontWeight: '600' }}>
                   <i className="bi bi-book me-2"></i>
-                  My Courses
+                  My Classes
                 </h5>
               </div>
               <div className="card-body p-4">
