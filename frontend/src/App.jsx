@@ -13,6 +13,7 @@ import VideoMeet from "./pages/VideoMeet";
 import ProtectedRoute from "./ProtectedRoute";
 
 import { useAuth } from "./context/AuthContext";
+import TeacherDashboard from "./layouts/teacher/TeacherDashboard";
 
 function App() {
     const { userData } = useAuth(); // ✅ get current user
@@ -43,7 +44,8 @@ function App() {
         path="/teacher-dashboard"
         element={
           <ProtectedRoute role="teacher" user={userData}>
-            <TeacherPage />
+            {/* <TeacherPage /> */}
+            <TeacherDashboard />
           </ProtectedRoute>
         }
       />
