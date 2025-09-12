@@ -4,7 +4,7 @@ import { Badge, IconButton, TextField } from '@mui/material';
 import { Button } from '@mui/material';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff'
-import styles from "../style/videoComponent.module.css";
+import styles from "../styles/videoComponent.module.css";
 import CallEndIcon from '@mui/icons-material/CallEnd'
 import MicIcon from '@mui/icons-material/Mic'
 import MicOffIcon from '@mui/icons-material/MicOff'
@@ -70,14 +70,25 @@ export default function VideoMeetComponent() {
 
     })
 
+    // let getDislayMedia = () => {
+    //     if (screen) {
+    //         if (navigator.mediaDevices.getDisplayMedia) {
+    //             navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
+    //                 .then(getDislayMediaSuccess)
+    //                 .then((stream) => { })
+    //                 .catch((e) => console.log(e))
+    //         }
+    //     }
+    // }
+
     let getDislayMedia = () => {
-        if (screen) {
-            if (navigator.mediaDevices.getDisplayMedia) {
-                navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
-                    .then(getDislayMediaSuccess)
-                    .then((stream) => { })
-                    .catch((e) => console.log(e))
-            }
+        if (screen && navigator.mediaDevices.getDisplayMedia) {
+            navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
+                .then(getDislayMediaSuccess)
+                .catch((e) => {
+                    console.log('Screen share error:', e);
+                    setScreen(false); // Reset state if sharing fails
+                })
         }
     }
 
@@ -382,23 +393,55 @@ export default function VideoMeetComponent() {
         return Object.assign(stream.getVideoTracks()[0], { enabled: false })
     }
 
-    let handleVideo = () => {
+    let handleVideo = (e) => {
+        e.preventDefault(); // Add this
         setVideo(!video);
         // getUserMedia();
     }
-    let handleAudio = () => {
+    let handleAudio = (e) => {
+        e.preventDefault(); // Add this
         setAudio(!audio)
         // getUserMedia();
     }
 
     useEffect(() => {
-        if (screen !== undefined) {
+        if (screen === true) {
             getDislayMedia();
         }
     }, [screen])
-    let handleScreen = () => {
-        setScreen(!screen);
+
+    // let handleScreen = (e) => {
+    //     e.preventDefault(); // Add this
+    //     setScreen(!screen);
+    // }
+
+    let [screenLoading, setScreenLoading] = useState(false);
+
+    let handleScreen = (e) => {
+        e.preventDefault();
+        
+        if (screenLoading) return; // Prevent multiple clicks
+        
+        setScreenLoading(true);
+        
+        if (screen) {
+            // Stop screen sharing
+            try {
+                let tracks = localVideoref.current.srcObject.getTracks()
+                tracks.forEach(track => track.stop())
+            } catch (e) { console.log(e) }
+            
+            setScreen(false);
+            setScreenLoading(false);
+            getUserMedia();
+        } else {
+            // Start screen sharing
+            setScreen(true);
+            setTimeout(() => setScreenLoading(false), 1000); // Reset after 1 second
+        }
     }
+
+
 
     let handleEndCall = () => {
         try {
@@ -419,19 +462,53 @@ export default function VideoMeetComponent() {
         setMessage(e.target.value);
     }
 
+    // const addMessage = (data, sender, socketIdSender) => {
+    //     // Only add message if it's NOT from yourself (prevents double messages)
+    //     if (socketIdSender !== socketIdRef.current) {
+    //         setMessages((prevMessages) => [
+    //             ...prevMessages,
+    //             { sender: sender, data: data }
+    //         ]);
+    //         setNewMessages((prevNewMessages) => prevNewMessages + 1);
+    //     }
+    // };
+
     const addMessage = (data, sender, socketIdSender) => {
-        setMessages((prevMessages) => [
-            ...prevMessages,
-            { sender: sender, data: data }
-        ]);
-        if (socketIdSender !== socketIdRef.current) {
-            setNewMessages((prevNewMessages) => prevNewMessages + 1);
-        }
+        // Check if this exact message already exists (prevent duplicates)
+        setMessages((prevMessages) => {
+            const isDuplicate = prevMessages.some(msg => 
+                msg.sender === sender && 
+                msg.data === data && 
+                Math.abs(Date.now() - (msg.timestamp || 0)) < 2000 // Within 2 seconds
+            );
+            
+            if (isDuplicate) {
+                console.log("Duplicate message detected, ignoring");
+                return prevMessages;
+            }
+            
+            const newMessage = {
+                sender: sender,
+                data: data,
+                timestamp: Date.now()
+            };
+            
+            return [...prevMessages, newMessage];
+        });
+        
+        setNewMessages((prevNewMessages) => prevNewMessages + 1);
     };
 
 
 
-    let sendMessage = () => {
+    let sendMessage = (e) => {
+         e.preventDefault();
+    
+        // Add message immediately to UI (optimistic update)
+        const newMessage = { sender: username, data: message };
+        setMessages(prevMessages => [...prevMessages, newMessage]);
+
+
         console.log(socketRef.current);
         socketRef.current.emit('chat-message', message, username)
         setMessage("");
@@ -440,7 +517,8 @@ export default function VideoMeetComponent() {
     }
 
     
-    let connect = () => {
+    let connect = (e) => {
+        e.preventDefault(); // Add this just in case
         setAskForUsername(false);
         getMedia();
     }
@@ -454,7 +532,7 @@ export default function VideoMeetComponent() {
                 <div>
 
 
-                    <h2>Enter into Lobby </h2>
+                    <h2>Enter into Live Class </h2>
                     <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" />
                     <Button variant="contained" onClick={connect}>Connect</Button>
 
@@ -490,7 +568,14 @@ export default function VideoMeetComponent() {
                             </div>
 
                             <div className={styles.chattingArea}>
-                                <TextField value={message} onChange={(e) => setMessage(e.target.value)} id="outlined-basic" label="Enter Your chat" variant="outlined" />
+                                <TextField value={message} onChange={(e) => setMessage(e.target.value)}
+                                    onKeyPress={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            sendMessage(e);
+                                        }
+                                    }}
+                                 id="outlined-basic" label="Enter Your chat" variant="outlined" />
                                 <Button variant='contained' onClick={sendMessage}>Send</Button>
                             </div>
 
@@ -511,9 +596,18 @@ export default function VideoMeetComponent() {
                         </IconButton>
 
                         {screenAvailable === true ?
-                            <IconButton onClick={handleScreen} style={{ color: "white" }}>
+                            // <IconButton onClick={handleScreen} style={{ color: "white" }}>
+                            //     {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
+                            // </IconButton> : <></>}
+
+                            <IconButton 
+                                onClick={handleScreen} 
+                                style={{ color: screenLoading ? "gray" : "white" }}
+                                disabled={screenLoading}
+                            >
                                 {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
-                            </IconButton> : <></>}
+                            </IconButton> : <></> }
+
 
                         <Badge badgeContent={newMessages} max={999} color='orange'>
                             <IconButton onClick={() => setModal(!showModal)} style={{ color: "white" }}>

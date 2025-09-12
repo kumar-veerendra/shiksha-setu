@@ -1,6 +1,6 @@
 import React from 'react';
 import "../App.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState } from 'react';
 import Footer from "../components/Footer"
 import HomeContent from './HomeContent';
@@ -10,10 +10,14 @@ function LandingPage() {
 
     const navigate = useNavigate();
 
+    const [meetingCode, setMeetingCode] = useState("");
+
     const handleGuest = () => {
-        // Generate a random 4-digit number
-        const randomId = Math.floor(1000 + Math.random() * 9000);
-        navigate(`/${randomId}`);
+        if (!meetingCode) {
+        alert("Please enter a meeting code");
+        return;
+        }
+        navigate(`/classroom/${meetingCode}`);
     };
 
     const navbarStyles = {  
@@ -45,7 +49,7 @@ function LandingPage() {
 
                         <li className="nav-item ms-3 mx-5">
                             <Link 
-                            to="/Home" 
+                            to="/" 
                             className="btn login-btn-custom"
                             >
                             Home
@@ -54,7 +58,7 @@ function LandingPage() {
 
                         <li className="nav-item ms-3 mx-5">
                             <Link 
-                            to="/login" 
+                            to="/feature" 
                             className="btn login-btn-custom"
                             >
                             Feature
@@ -63,7 +67,7 @@ function LandingPage() {
 
                         <li className="nav-item ms-3 mx-5">
                             <Link 
-                            to="/login" 
+                            to="/about" 
                             className="btn login-btn-custom"
                             >
                             About
@@ -72,7 +76,7 @@ function LandingPage() {
                         
                         <li className="nav-item ms-3 mx-5">
                             <Link 
-                            to="/login" 
+                            to="/contact" 
                             className="btn login-btn-custom"
                             >
                             Contact
