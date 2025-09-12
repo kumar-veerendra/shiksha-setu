@@ -11,6 +11,7 @@ import userRoutes from "./routes/users.routes.js";
 import { connectToSocket } from "./controllers/socketManager.js";
 
 
+import meetingRoutes from "./routes/meetings.routes.js";
 
 
 const app = express();
@@ -25,6 +26,9 @@ app.use(express.urlencoded({limit: "40kb", extended: true}))
 
 app.use("/api/v1/users", userRoutes);
 
+app.use("/api/v1/meetings", meetingRoutes);
+
+
 // app.get("/", (req, res) => {
 //     return res.send("Hello World!");
 // });
@@ -33,7 +37,7 @@ const start = async () => {
     const connectionDB = await mongoose.connect("mongodb+srv://shikshasetu100:shikshasetu@shikshasetu.muqfua4.mongodb.net/");
     console.log(`MONGO Connected DB Host : ${connectionDB.connection.host}`)
 
-    server.listen(app.get("port"), () => {
+    server.listen(app.get("port"), "0.0.0.0", () => {
         console.log("Listening on PORT 8000...");
     });
 }

@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import server from "../../environment";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+
 import { 
   User, 
   Video, 
@@ -24,6 +28,10 @@ import {
 
 // Teacher Profile Modal Component
 const TeachProfileModal = ({ teacher, setTeacher, setModalOpen }) => {
+
+  // const navigate = useNavigate();
+
+
   const [name, setName] = useState(teacher.name || "");
   const [email, setEmail] = useState(teacher.email || "");
   const [profilePic, setProfilePic] = useState(teacher.profilePic || "");
@@ -207,6 +215,10 @@ const TeacherNavbar = ({ teacher, onProfileClick }) => {
 
 // Main Teacher Dashboard Component
 const TeacherDashboard = () => {
+  const { userData } = useContext(AuthContext); // ✅ get user from context
+
+  const navigate = useNavigate();
+
   const [teacher, setTeacher] = useState({
     name: 'Dr. Priya Sharma',
     email: 'priya.sharma@college.edu',
@@ -240,13 +252,53 @@ const TeacherDashboard = () => {
     { label: 'Average Rating', value: '4.8', icon: BarChart3, color: 'warning' }
   ];
 
-  const startLiveSession = () => {
-    setIsLive(true);
+  const startLiveSession = async () => {
+    try {
+      const meetingCode = Math.random().toString(36).substring(2, 8).toUpperCase(); // ✅ generate code
+
+      const response = await fetch(`${server}/api/v1/meetings/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userData.username, meetingCode }) // or userData._id if you store ID
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        const meetingCode = data.meeting.meetingCode;
+        navigate(`/classroom/${meetingCode}`);
+      } else {
+        alert("Failed to start class: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error starting class:", error);
+      alert("Something went wrong while starting the class");
+    }
   };
 
-  const stopLiveSession = () => {
-    setIsLive(false);
+  // const stopLiveSession = () => {
+  //   setIsLive(false);
+  // };
+
+  const stopLiveSession = async (meetingCode) => {
+    try {
+      const response = await fetch(`${server}/api/v1/meetings/end/${meetingCode}`, {
+        method: "PUT"
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert("Class ended successfully!");
+        navigate("/teacher-dashboard"); // or wherever you want teacher to go back
+      } else {
+        alert("Failed to end class: " + data.message);
+      }
+    } catch (err) {
+      console.error("Error ending class:", err);
+      alert("Something went wrong while ending the class");
+    }
   };
+
 
   const TabButton = ({ id, label, icon: Icon }) => (
     <button
@@ -291,7 +343,7 @@ const TeacherDashboard = () => {
           <h5 className="card-title">Quick Actions</h5>
           <div className="row">
             <div className="col-md-4 mb-3">
-              <button 
+              <button
                 onClick={startLiveSession}
                 className="btn btn-outline-danger w-100 d-flex align-items-center justify-content-start p-3"
               >
@@ -301,6 +353,7 @@ const TeacherDashboard = () => {
                   <small>Begin teaching session</small>
                 </div>
               </button>
+
             </div>
             
             <div className="col-md-4 mb-3">

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import server from "../../environment";
 
 const StuDashboard = ({ user }) => {
   const [connectionStatus] = useState("good"); // good, poor, offline
   const [dataUsage] = useState(15.2);
   const [batteryLevel] = useState(78);
+  const navigate = useNavigate();
   
   // Live Classes Data
   const upcomingClasses = [
@@ -156,10 +159,41 @@ const StuDashboard = ({ user }) => {
                 <h6 className="card-title mb-3">⚡ Quick Actions</h6>
                 <div className="row g-2">
                   <div className="col-6 col-md-3">
-                    <button className="btn btn-outline-primary btn-sm w-100">
+                    {/* <button className="btn btn-outline-primary btn-sm w-100"
+                      onClick={() => navigate("/live-class")}
+                    >
                       📡 Join Live Class
-                    </button>
+                    </button> */}
+
+                    <button
+  className="btn btn-outline-primary btn-sm w-100"
+  onClick={async () => {
+    try {
+      const response = await fetch(`${server}/api/v1/meetings/active`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.meeting) {
+        // If there is an active meeting, join it
+        navigate(`/classroom/${data.meeting.meetingCode}`);
+      } else {
+        // No active meeting
+        alert("No class is started yet");
+      }
+    } catch (err) {
+      console.error("Error joining class:", err);
+      alert("Something went wrong while joining the class");
+    }
+  }}
+>
+  📡 Join Live Class
+</button>
+
                   </div>
+
                   <div className="col-6 col-md-3">
                     <button className="btn btn-outline-success btn-sm w-100">
                       💾 Download Content
