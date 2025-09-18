@@ -152,6 +152,8 @@ const TeachProfileModal = ({ teacher, setTeacher, setModalOpen }) => {
   );
 };
 
+
+
 // Teacher Navbar Component
 const TeacherNavbar = ({ teacher, onProfileClick }) => {
   const [isConnected, setIsConnected] = useState(true);
@@ -161,7 +163,7 @@ const TeacherNavbar = ({ teacher, onProfileClick }) => {
       <div className="container-fluid">
         <div className="d-flex align-items-center">
           <Monitor className="me-2 text-primary" size={32} />
-          <span className="navbar-brand mb-0 h1">Rural Classroom</span>
+          <span className="navbar-brand mb-0 h1">Shiksha Setu</span>
           <div className="d-none d-md-flex align-items-center ms-3">
             {isConnected ? (
               <Wifi className="me-1 text-success" size={16} />
@@ -213,6 +215,8 @@ const TeacherNavbar = ({ teacher, onProfileClick }) => {
   );
 };
 
+
+
 // Main Teacher Dashboard Component
 const TeacherDashboard = () => {
   const { userData } = useContext(AuthContext); // ✅ get user from context
@@ -226,6 +230,7 @@ const TeacherDashboard = () => {
     experience: '8',
     profilePic: ''
   });
+
   
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');

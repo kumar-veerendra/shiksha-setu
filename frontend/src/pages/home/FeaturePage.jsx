@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import HomeNavBar from '../HomeNavBar';
 
 const FeaturePage = () => {
   const [activeFeature, setActiveFeature] = useState(0);
@@ -60,7 +61,7 @@ const FeaturePage = () => {
   return (
     <div className="min-vh-100" style={{ backgroundColor: '#f8f9fa' }}>
       {/* Navigation */}
-      <nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#2c3e50' }}>
+      {/* <nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#2c3e50' }}>
         <div className="container">
           <div className="navbar-brand fw-bold">
             <span className="me-2">🌐</span>
@@ -78,11 +79,13 @@ const FeaturePage = () => {
             </ul>
           </div>
         </div>
-      </nav>
+      </nav> */}
+
+      <HomeNavBar />
 
       {/* Hero Section */}
-      <section className="py-5" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
-        <div className="container">
+      <section className="py-5 mt-5" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+        <div className="container mt-5">
           <div className="row align-items-center min-vh-75">
             <div className="col-lg-6 text-white">
               <h1 className="display-4 fw-bold mb-4">
@@ -489,28 +492,56 @@ const FeaturePage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-4 bg-dark text-white">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-md-6">
-              <div className="d-flex align-items-center">
-                <span className="h5 mb-0 me-2">🌐</span>
-                <span className="fw-bold">Rural Connect</span>
-              </div>
-              <small className="text-muted">Bridging the digital divide in education</small>
-            </div>
-            <div className="col-md-6 text-md-end">
-              <small className="text-muted">
-                Built for Smart India Hackathon 2024
-              </small>
-            </div>
-          </div>
+      <footer className="py-5 bg-dark text-white">
+  <div className="container">
+    <div className="row">
+      
+      {/* Logo + Tagline */}
+      <div className="col-md-4 mb-4">
+        <div className="d-flex align-items-center mb-2">
+          <span className="h5 mb-0 me-2">🌐</span>
+          <span className="fw-bold text-white">Shiksha Setu</span>
         </div>
-      </footer>
+        <small className="text-light">
+          Bridging the digital divide in education
+        </small>
+      </div>
+
+      {/* About Section */}
+      <div className="col-md-4 mb-4">
+        <h6 className="fw-bold text-white">About</h6>
+        <p className="small text-light mb-0">
+          Shiksha Setu enables remote classrooms and provides quality 
+          learning resources for students in rural areas, ensuring equal 
+          access to education.
+        </p>
+      </div>
+
+      {/* Features Section */}
+      <div className="col-md-4 mb-4">
+        <h6 className="fw-bold text-white">Features</h6>
+        <ul className="list-unstyled small">
+          <li><a href="#live" className="text-light text-decoration-none">Live Classes</a></li>
+          <li><a href="#materials" className="text-light text-decoration-none">Study Materials</a></li>
+          <li><a href="#dashboards" className="text-light text-decoration-none">Dashboards</a></li>
+          <li><a href="#community" className="text-light text-decoration-none">Community Support</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div className="text-center pt-3 border-top border-secondary mt-3">
+      <small className="text-light">
+        Built with ❤️ for Smart India Hackathon 2025
+      </small>
+    </div>
+  </div>
+</footer>
+
 
       {/* Bootstrap JavaScript */}
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+      {/* <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" /> */}
     </div>
   );
 };

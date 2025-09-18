@@ -1,66 +1,83 @@
 import React, { useState } from 'react';
+import HomeNavBar from '../HomeNavBar';
 
 const About = () => {
   const [activeTeamMember, setActiveTeamMember] = useState(0);
 
   const teamMembers = [
     {
-      name: "Arjun Sharma",
+      name: "Veerendra Kumar",
       role: "Full Stack Developer",
       image: "👨‍💻",
       bio: "Specializes in low-latency web applications and Progressive Web Apps. Passionate about making technology accessible to rural communities.",
       skills: ["React", "Node.js", "WebRTC", "PWA"]
     },
+
     {
-      name: "Priya Singh",
-      role: "UI/UX Designer",
-      image: "👩‍🎨",
-      bio: "Expert in designing user-friendly interfaces for low-bandwidth environments. Focuses on accessibility and mobile-first design.",
-      skills: ["UI Design", "UX Research", "Mobile Design", "Accessibility"]
+      name: "Shivam Mishra",
+      role: "Frontend Engineer",
+      image: "👨‍💻",
+      bio: "Designs intuitive user interfaces with focus on accessibility and low-bandwidth performance. Passionate about responsive design and seamless user experience.",
+      skills: ["HTML", "CSS", "JavaScript", "React"]
     },
     {
-      name: "Rahul Kumar",
+      name: "Nayan Kumar",
       role: "Backend Engineer",
       image: "👨‍🔧",
       bio: "Builds scalable server architectures optimized for rural connectivity. Expert in data compression and edge computing solutions.",
       skills: ["Python", "Cloud Architecture", "API Design", "Data Compression"]
     },
     {
-      name: "Ananya Patel",
+      name: "Ujjwal Kumar Singh",
       role: "Product Manager",
       image: "👩‍💼",
       bio: "Coordinates product development and ensures solutions meet real rural education needs. Background in educational technology.",
       skills: ["Product Strategy", "Education Tech", "User Research", "Agile"]
+    },
+    {
+      name: "Shreysi Bharti",
+      role: "UI/UX Designer",
+      image: "👩‍🎨",
+      bio: "Expert in designing user-friendly interfaces for low-bandwidth environments. Focuses on accessibility and mobile-first design.",
+      skills: ["UI Design", "UX Research", "Mobile Design", "Accessibility"]
+    },
+    {
+      name: "Om Shankar Madhawan",
+      role: "Research & Data Specialist",
+      image: "🔬",
+      bio: "Explores innovative solutions for rural education using data insights. Skilled in user research, data analytics, and applying AI for problem-solving.",
+      skills: ["Data Analysis", "Machine Learning", "User Research", "Statistics"]
     }
+
   ];
 
   const milestones = [
     {
-      year: "2024",
+      year: "2025",
       month: "Jan",
       event: "Project Conceptualization",
       description: "Identified the rural education gap during our college visits"
     },
     {
-      year: "2024",
+      year: "2025",
       month: "Mar",
       event: "Research & Development",
       description: "Extensive field research in 15+ rural colleges across 5 states"
     },
     {
-      year: "2024",
+      year: "2025",
       month: "Jun",
       event: "Prototype Development",
       description: "Built and tested MVP with adaptive streaming technology"
     },
     {
-      year: "2024",
+      year: "2025",
       month: "Aug",
       event: "Pilot Testing",
       description: "Successfully tested in 10 rural colleges with 500+ students"
     },
     {
-      year: "2024",
+      year: "2025",
       month: "Sep",
       event: "SIH Participation",
       description: "Presenting our solution at Smart India Hackathon 2024"
@@ -93,7 +110,7 @@ const About = () => {
   return (
     <div className="min-vh-100" style={{ backgroundColor: '#f8f9fa' }}>
       {/* Navigation */}
-      <nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#2c3e50' }}>
+      {/* <nav className="navbar navbar-expand-lg navbar-dark" style={{ backgroundColor: '#2c3e50' }}>
         <div className="container">
           <div className="navbar-brand fw-bold">
             <span className="me-2">🌐</span>
@@ -111,26 +128,28 @@ const About = () => {
             </ul>
           </div>
         </div>
-      </nav>
+      </nav> */}
+
+      <HomeNavBar />
 
       {/* Hero Section */}
-      <section className="py-5 bg-primary text-white">
-        <div className="container">
+      <section className="py-5 bg-primary text-white mt-5">
+        <div className="container mt-3">
           <div className="row align-items-center">
             <div className="col-lg-8">
-              <h1 className="display-4 fw-bold mb-4">About Rural Connect</h1>
+              <h1 className="display-4 fw-bold mb-4">About Shiksha Setu</h1>
               <p className="lead mb-4">
                 We're a passionate team of students and developers working to bridge the digital divide 
                 in rural education through innovative, low-bandwidth virtual classroom solutions.
               </p>
               <div className="d-flex flex-wrap gap-3">
-                <div className="bg-white bg-opacity-20 rounded px-3 py-2">
+                <div className="bg-white bg-opacity-20 rounded px-3 py-2 text-dark">
                   <small>🎯 Mission-Driven</small>
                 </div>
-                <div className="bg-white bg-opacity-20 rounded px-3 py-2">
-                  <small>🏆 SIH 2024 Participants</small>
+                <div className="bg-white bg-opacity-20 rounded px-3 py-2 text-dark">
+                  <small>🏆 SIH 2025 Participants</small>
                 </div>
-                <div className="bg-white bg-opacity-20 rounded px-3 py-2">
+                <div className="bg-white bg-opacity-20 rounded px-3 py-2 text-dark">
                   <small>🌟 Social Impact Focus</small>
                 </div>
               </div>
@@ -363,24 +382,52 @@ const About = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-4 bg-dark text-white">
+      <footer className="py-5 bg-dark text-white">
         <div className="container">
-          <div className="row align-items-center">
-            <div className="col-md-6">
-              <div className="d-flex align-items-center">
+          <div className="row">
+            
+            {/* Logo + Tagline */}
+            <div className="col-md-4 mb-4">
+              <div className="d-flex align-items-center mb-2">
                 <span className="h5 mb-0 me-2">🌐</span>
-                <span className="fw-bold">Rural Connect</span>
+                <span className="fw-bold text-white">Shiksha Setu</span>
               </div>
-              <small className="text-muted">Bridging the digital divide in education</small>
-            </div>
-            <div className="col-md-6 text-md-end">
-              <small className="text-muted">
-                Built with ❤️ for Smart India Hackathon 2024
+              <small className="text-light">
+                Bridging the digital divide in education
               </small>
             </div>
+
+            {/* About Section */}
+            <div className="col-md-4 mb-4">
+              <h6 className="fw-bold text-white">About</h6>
+              <p className="small text-light mb-0">
+                Shiksha Setu enables remote classrooms and provides quality 
+                learning resources for students in rural areas, ensuring equal 
+                access to education.
+              </p>
+            </div>
+
+            {/* Features Section */}
+            <div className="col-md-4 mb-4">
+              <h6 className="fw-bold text-white">Features</h6>
+              <ul className="list-unstyled small">
+                <li><a href="#live" className="text-light text-decoration-none">Live Classes</a></li>
+                <li><a href="#materials" className="text-light text-decoration-none">Study Materials</a></li>
+                <li><a href="#dashboards" className="text-light text-decoration-none">Dashboards</a></li>
+                <li><a href="#community" className="text-light text-decoration-none">Community Support</a></li>
+              </ul>
+            </div>
+
+          </div>
+
+          <div className="text-center pt-3 border-top border-secondary mt-3">
+            <small className="text-light">
+              Built with ❤️ for Smart India Hackathon 2025
+            </small>
           </div>
         </div>
       </footer>
+
 
       {/* Bootstrap JavaScript
       <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>

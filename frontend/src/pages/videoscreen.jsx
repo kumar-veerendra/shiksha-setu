@@ -38,7 +38,7 @@ export default function VideoMeetComponent() {
 
     let [audio, setAudio] = useState();
 
-    let [screen, setScreen] = useState(false);
+    let [screen, setScreen] = useState();
 
     let [showModal, setModal] = useState(true);
 
@@ -64,18 +64,11 @@ export default function VideoMeetComponent() {
 
     // }
 
-    // useEffect(() => {
-    //     console.log("HELLO")
-    //     getPermissions();
-
-    // })
-
     useEffect(() => {
         console.log("HELLO")
         getPermissions();
-    }, []); // run only once
 
-
+    })
 
     let getDislayMedia = () => {
         if (screen) {
@@ -87,17 +80,6 @@ export default function VideoMeetComponent() {
             }
         }
     }
-
-    // let getDislayMedia = () => {
-    //     if (screen && navigator.mediaDevices.getDisplayMedia) {
-    //         navigator.mediaDevices.getDisplayMedia({ video: true, audio: true })
-    //             .then(getDislayMediaSuccess)
-    //             .catch((e) => {
-    //                 console.log('Screen share error:', e);
-    //                 setScreen(false); // Reset state if sharing fails
-    //             })
-    //     }
-    // }
 
     const getPermissions = async () => {
         try {
@@ -124,18 +106,6 @@ export default function VideoMeetComponent() {
             } else {
                 setScreenAvailable(false);
             }
-
-            // useEffect(() => {
-            //       console.log("getDisplayMedia:", navigator.mediaDevices?.getDisplayMedia);
-
-            //     if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
-            //         setScreenAvailable(true);
-            //     } else {
-            //         setScreenAvailable(false);
-            //     }
-            // }, []); // empty dependency → runs only once
-
-
 
             if (videoAvailable || audioAvailable) {
                 const userMediaStream = await navigator.mediaDevices.getUserMedia({ video: videoAvailable, audio: audioAvailable });
@@ -412,87 +382,23 @@ export default function VideoMeetComponent() {
         return Object.assign(stream.getVideoTracks()[0], { enabled: false })
     }
 
-    // let handleVideo = (e) => {
-    //     e.preventDefault(); // Add this
-    //     setVideo(!video);
-    //     // getUserMedia();
-    // }
-
-    const handleVideo = (e) => {
-        e.preventDefault();
-
-        const videoTracks = localVideoref.current?.srcObject?.getVideoTracks();
-        if (!videoTracks) return;
-
-        videoTracks.forEach(track => {
-            track.enabled = !track.enabled; // toggle camera
-        });
-
-        setVideo(prev => !prev); // update icon
-    };
-
-
-
-    // let handleAudio = (e) => {
-    //     e.preventDefault(); // Add this
-    //     setAudio(!audio)
-    //     // getUserMedia();
-    // }
-
-    const handleAudio = (e) => {
-        e.preventDefault();
-
-        const audioTracks = localVideoref.current?.srcObject?.getAudioTracks();
-        if (!audioTracks) return;
-
-        audioTracks.forEach(track => {
-            track.enabled = !track.enabled; // toggle microphone
-        });
-
-        setAudio(prev => !prev); // update icon
-    };
-
-
-
+    let handleVideo = () => {
+        setVideo(!video);
+        // getUserMedia();
+    }
+    let handleAudio = () => {
+        setAudio(!audio)
+        // getUserMedia();
+    }
 
     useEffect(() => {
-        if (screen === true) {
+        if (screen !== undefined) {
             getDislayMedia();
         }
     }, [screen])
-
-    // let handleScreen = (e) => {
-    //     e.preventDefault(); // Add this
-    //     setScreen(!screen);
-    // }
-
-    let [screenLoading, setScreenLoading] = useState(false);
-
-    let handleScreen = (e) => {
-        e.preventDefault();
-        
-        if (screenLoading) return; // Prevent multiple clicks
-        
-        setScreenLoading(true);
-        
-        if (screen) {
-            // Stop screen sharing
-            try {
-                let tracks = localVideoref.current.srcObject.getTracks()
-                tracks.forEach(track => track.stop())
-            } catch (e) { console.log(e) }
-            
-            setScreen(false);
-            setScreenLoading(false);
-            getUserMedia();
-        } else {
-            // Start screen sharing
-            setScreen(true);
-            setTimeout(() => setScreenLoading(false), 1000); // Reset after 1 second
-        }
+    let handleScreen = () => {
+        setScreen(!screen);
     }
-
-
 
     let handleEndCall = () => {
         try {
@@ -513,53 +419,19 @@ export default function VideoMeetComponent() {
         setMessage(e.target.value);
     }
 
-    // const addMessage = (data, sender, socketIdSender) => {
-    //     // Only add message if it's NOT from yourself (prevents double messages)
-    //     if (socketIdSender !== socketIdRef.current) {
-    //         setMessages((prevMessages) => [
-    //             ...prevMessages,
-    //             { sender: sender, data: data }
-    //         ]);
-    //         setNewMessages((prevNewMessages) => prevNewMessages + 1);
-    //     }
-    // };
-
     const addMessage = (data, sender, socketIdSender) => {
-        // Check if this exact message already exists (prevent duplicates)
-        setMessages((prevMessages) => {
-            const isDuplicate = prevMessages.some(msg => 
-                msg.sender === sender && 
-                msg.data === data && 
-                Math.abs(Date.now() - (msg.timestamp || 0)) < 2000 // Within 2 seconds
-            );
-            
-            if (isDuplicate) {
-                console.log("Duplicate message detected, ignoring");
-                return prevMessages;
-            }
-            
-            const newMessage = {
-                sender: sender,
-                data: data,
-                timestamp: Date.now()
-            };
-            
-            return [...prevMessages, newMessage];
-        });
-        
-        setNewMessages((prevNewMessages) => prevNewMessages + 1);
+        setMessages((prevMessages) => [
+            ...prevMessages,
+            { sender: sender, data: data }
+        ]);
+        if (socketIdSender !== socketIdRef.current) {
+            setNewMessages((prevNewMessages) => prevNewMessages + 1);
+        }
     };
 
 
 
-    let sendMessage = (e) => {
-         e.preventDefault();
-    
-        // Add message immediately to UI (optimistic update)
-        const newMessage = { sender: username, data: message };
-        setMessages(prevMessages => [...prevMessages, newMessage]);
-
-
+    let sendMessage = () => {
         console.log(socketRef.current);
         socketRef.current.emit('chat-message', message, username)
         setMessage("");
@@ -568,8 +440,7 @@ export default function VideoMeetComponent() {
     }
 
     
-    let connect = (e) => {
-        e.preventDefault(); // Add this just in case
+    let connect = () => {
         setAskForUsername(false);
         getMedia();
     }
@@ -577,14 +448,13 @@ export default function VideoMeetComponent() {
 
     return (
         <div>
-            
 
             {askForUsername === true ?
 
                 <div>
 
 
-                    <h2>Enter into Live Class </h2>
+                    <h2>Enter into Lobby </h2>
                     <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" />
                     <Button variant="contained" onClick={connect}>Connect</Button>
 
@@ -620,14 +490,7 @@ export default function VideoMeetComponent() {
                             </div>
 
                             <div className={styles.chattingArea}>
-                                <TextField value={message} onChange={(e) => setMessage(e.target.value)}
-                                    onKeyPress={(e) => {
-                                        if (e.key === 'Enter') {
-                                            e.preventDefault();
-                                            sendMessage(e);
-                                        }
-                                    }}
-                                 id="outlined-basic" label="Enter Your chat" variant="outlined" />
+                                <TextField value={message} onChange={(e) => setMessage(e.target.value)} id="outlined-basic" label="Enter Your chat" variant="outlined" />
                                 <Button variant='contained' onClick={sendMessage}>Send</Button>
                             </div>
 
@@ -646,21 +509,6 @@ export default function VideoMeetComponent() {
                         <IconButton onClick={handleAudio} style={{ color: "white" }}>
                             {audio === true ? <MicIcon /> : <MicOffIcon />}
                         </IconButton>
-                        
-                        {console.log("Render check:", screenAvailable, screen)}
-                        {/* {screenAvailable === true ? (
-                            // <IconButton onClick={handleScreen} style={{ color: "white" }}>
-                            //     {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
-                            // </IconButton> : <></>}
-
-                            <IconButton 
-                                onClick={handleScreen} 
-                                style={{ color: screenLoading ? "gray" : "white" }}
-                                disabled={screenLoading}
-                            >
-                                {screen ?  <StopScreenShareIcon /> : <ScreenShareIcon /> }
-                            </IconButton>
-                            ) : null } */}
 
                         {screenAvailable === true ?
                             <IconButton onClick={handleScreen} style={{ color: "white" }}>
