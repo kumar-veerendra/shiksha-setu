@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import server from "../../environment";
+import ChatBot from "./ChatBot";
 
 const StuDashboard = ({ user }) => {
   const [connectionStatus] = useState("good"); // good, poor, offline
@@ -201,7 +202,7 @@ const StuDashboard = ({ user }) => {
                   </div>
                   <div className="col-6 col-md-3">
                     <button className="btn btn-outline-info btn-sm w-100">
-                      📱 Audio-Only Mode
+                      📱 Smart Audio Switch
                     </button>
                   </div>
                   <div className="col-6 col-md-3">
@@ -576,6 +577,8 @@ const StuDashboard = ({ user }) => {
         <div style={{height: "80px"}} className="d-block d-lg-none"></div>
 
       </main>
+
+      <ChatBot />
     </div>
   );
 };

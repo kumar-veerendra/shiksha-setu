@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import HomeNavBar from '../HomeNavBar';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -55,42 +56,11 @@ const Contact = () => {
     <>
       <div className="bg-light min-vh-100">
         {/* Navigation */}
-        <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-          <div className="container">
-            <a className="navbar-brand fw-bold" href="#">
-              <i className="fas fa-graduation-cap me-2"></i>
-              RuralEdu Connect
-            </a>
-            <button 
-              className="navbar-toggler" 
-              type="button" 
-              data-bs-toggle="collapse" 
-              data-bs-target="#navbarNav"
-            >
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNav">
-              <ul className="navbar-nav ms-auto">
-                <li className="nav-item">
-                  <a className="nav-link" href="#home">Home</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#about">About</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#solution">Solution</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link active" href="#contact">Contact</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
+        <HomeNavBar />
 
         {/* Hero Section */}
-        <section className="bg-primary text-white py-5">
-          <div className="container">
+        <section className="bg-primary text-white py-5 mt-5">
+          <div className="container mt-5">
             <div className="row align-items-center">
               <div className="col-lg-8">
                 <h1 className="display-4 fw-bold mb-3">Contact Our Team</h1>
@@ -469,7 +439,7 @@ const Contact = () => {
         </div>
 
         {/* Footer */}
-        <footer className="bg-dark text-white py-4 mt-5">
+        {/* <footer className="bg-dark text-white py-4 mt-5">
           <div className="container">
             <div className="row align-items-center">
               <div className="col-md-6">
@@ -486,7 +456,55 @@ const Contact = () => {
               </div>
             </div>
           </div>
+        </footer> */}
+
+        <footer className="py-5 bg-dark text-white">
+          <div className="container">
+            <div className="row">
+              
+              {/* Logo + Tagline */}
+              <div className="col-md-4 mb-4">
+                <div className="d-flex align-items-center mb-2">
+                  <span className="h5 mb-0 me-2">🌐</span>
+                  <span className="fw-bold text-white">Shiksha Setu</span>
+                </div>
+                <small className="text-light">
+                  Bridging the digital divide in education
+                </small>
+              </div>
+
+              {/* About Section */}
+              <div className="col-md-4 mb-4">
+                <h6 className="fw-bold text-white">About</h6>
+                <p className="small text-light mb-0">
+                  Shiksha Setu enables remote classrooms and provides quality 
+                  learning resources for students in rural areas, ensuring equal 
+                  access to education.
+                </p>
+              </div>
+
+              {/* Features Section */}
+              <div className="col-md-4 mb-4">
+                <h6 className="fw-bold text-white">Features</h6>
+                <ul className="list-unstyled small">
+                  <li><a href="#live" className="text-light text-decoration-none">Live Classes</a></li>
+                  <li><a href="#materials" className="text-light text-decoration-none">Study Materials</a></li>
+                  <li><a href="#dashboards" className="text-light text-decoration-none">Dashboards</a></li>
+                  <li><a href="#community" className="text-light text-decoration-none">Community Support</a></li>
+                </ul>
+              </div>
+
+            </div>
+
+            <div className="text-center pt-3 border-top border-secondary mt-3">
+              <small className="text-light">
+                Built with ❤️ for Smart India Hackathon 2024
+              </small>
+            </div>
+          </div>
         </footer>
+
+
       </div>
 
       {/* Bootstrap JS CDN */}

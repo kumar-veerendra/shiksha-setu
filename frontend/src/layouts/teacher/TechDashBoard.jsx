@@ -1,57 +1,435 @@
-import React from "react";
+import React, { useState, useContext } from 'react';
+import server from "../../environment";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import TechNavbar from './TechNavbar';
 
+import { 
+  User, 
+  Video, 
+  Upload, 
+  Users, 
+  BookOpen, 
+  Calendar, 
+  Settings, 
+  Bell, 
+  Download,
+  Play,
+  Pause,
+  Mic,
+  MicOff,
+  Monitor,
+  FileText,
+  BarChart3,
+  Clock,
+  Wifi,
+  WifiOff
+} from 'lucide-react';
+
+
+// Main Teacher Dashboard Component
 const TechDashboard = () => {
-  const [teacher, setTeacher] = React.useState({
-    name: "Mrs. Sharma",
-    email: "sharma@school.com",
-    profilePic: "",
+  const { userData } = useContext(AuthContext); // ✅ get user from context
+
+  const navigate = useNavigate();
+
+  const [teacher, setTeacher] = useState({
+    name: 'Dr. Priya Sharma',
+    email: 'priya.sharma@college.edu',
+    subject: 'Artificial Intelligence',
+    experience: '8',
+    profilePic: ''
   });
 
-  const myClasses = [
-    { course: "Math 10A", students: 30, time: "10:00 AM" },
-    { course: "Science 10B", students: 28, time: "12:00 PM" },
+  
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [isLive, setIsLive] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+
+  // Sample data
+  const upcomingClasses = [
+    { id: 1, subject: 'AI Fundamentals', time: '10:00 AM', students: 45, college: 'Rajasthan Rural College' },
+    { id: 2, subject: 'Machine Learning', time: '2:00 PM', students: 32, college: 'Village Tech Institute' },
+    { id: 3, subject: 'Neural Networks', time: '4:00 PM', students: 28, college: 'Rural Engineering College' }
   ];
 
-  const assignmentsToGrade = [
-    { title: "Math HW1", due: "2025-09-05" },
-    { title: "Science Lab", due: "2025-09-06" },
+  const recentSessions = [
+    { id: 1, title: 'Introduction to AI', date: '2024-01-15', duration: '45 min', views: 123, size: '8.5 MB' },
+    { id: 2, title: 'Data Preprocessing', date: '2024-01-14', duration: '52 min', views: 98, size: '12.3 MB' },
+    { id: 3, title: 'Classification Algorithms', date: '2024-01-12', duration: '38 min', views: 156, size: '7.2 MB' }
   ];
+
+  const stats = [
+    { label: 'Total Students', value: '1,247', icon: Users, color: 'primary' },
+    { label: 'Live Sessions', value: '34', icon: Video, color: 'success' },
+    { label: 'Recorded Content', value: '156', icon: FileText, color: 'info' },
+    { label: 'Average Rating', value: '4.8', icon: BarChart3, color: 'warning' }
+  ];
+
+  const startLiveSession = async () => {
+    try {
+      const meetingCode = Math.random().toString(36).substring(2, 8).toUpperCase(); // ✅ generate code
+
+      const response = await fetch(`${server}/api/v1/meetings/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userData.username, meetingCode }) // or userData._id if you store ID
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        const meetingCode = data.meeting.meetingCode;
+        navigate(`/classroom/${meetingCode}`);
+      } else {
+        alert("Failed to start class: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error starting class:", error);
+      alert("Something went wrong while starting the class");
+    }
+  };
+
+  // const stopLiveSession = () => {
+  //   setIsLive(false);
+  // };
+
+  const stopLiveSession = async (meetingCode) => {
+    try {
+      const response = await fetch(`${server}/api/v1/meetings/end/${meetingCode}`, {
+        method: "PUT"
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert("Class ended successfully!");
+        navigate("/teacher-dashboard"); // or wherever you want teacher to go back
+      } else {
+        alert("Failed to end class: " + data.message);
+      }
+    } catch (err) {
+      console.error("Error ending class:", err);
+      alert("Something went wrong while ending the class");
+    }
+  };
+
+
+  const TabButton = ({ id, label, icon: Icon }) => (
+    <button
+      onClick={() => setActiveTab(id)}
+      className={`btn me-2 mb-2 d-flex align-items-center ${
+        activeTab === id 
+          ? 'btn-primary' 
+          : 'btn-outline-secondary'
+      }`}
+    >
+      <Icon className="me-1" size={16} />
+      {label}
+    </button>
+  );
+
+  const renderOverview = () => (
+    <div>
+      {/* Stats Grid */}
+      <div className="row mb-4">
+        {stats.map((stat, index) => (
+          <div key={index} className="col-lg-3 col-md-6 mb-3">
+            <div className="card h-100">
+              <div className="card-body">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <p className="text-muted mb-1">{stat.label}</p>
+                    <h3 className="mb-0">{stat.value}</h3>
+                  </div>
+                  <div className={`bg-${stat.color} p-3 rounded`}>
+                    <stat.icon className="text-white" size={24} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick Actions */}
+      <div className="card mb-4">
+        <div className="card-body">
+          <h5 className="card-title">Quick Actions</h5>
+          <div className="row">
+            <div className="col-md-4 mb-3">
+              <button
+                onClick={startLiveSession}
+                className="btn btn-outline-danger w-100 d-flex align-items-center justify-content-start p-3"
+              >
+                <Video className="me-3" size={24} />
+                <div className="text-start">
+                  <div className="fw-semibold">Start Live Class</div>
+                  <small>Begin teaching session</small>
+                </div>
+              </button>
+
+            </div>
+            
+            <div className="col-md-4 mb-3">
+              <button className="btn btn-outline-primary w-100 d-flex align-items-center justify-content-start p-3">
+                <Upload className="me-3" size={24} />
+                <div className="text-start">
+                  <div className="fw-semibold">Upload Content</div>
+                  <small>Add new materials</small>
+                </div>
+              </button>
+            </div>
+            
+            <div className="col-md-4 mb-3">
+              <button className="btn btn-outline-success w-100 d-flex align-items-center justify-content-start p-3">
+                <Calendar className="me-3" size={24} />
+                <div className="text-start">
+                  <div className="fw-semibold">Schedule Class</div>
+                  <small>Plan future sessions</small>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Upcoming Classes */}
+      <div className="card">
+        <div className="card-header">
+          <h5 className="card-title mb-0">Today's Classes</h5>
+        </div>
+        <div className="card-body">
+          {upcomingClasses.map((cls) => (
+            <div key={cls.id} className="d-flex justify-content-between align-items-center p-3 bg-light rounded mb-2">
+              <div className="d-flex align-items-center">
+                <Clock className="me-3 text-muted" size={20} />
+                <div>
+                  <div className="fw-semibold">{cls.subject}</div>
+                  <small className="text-muted">{cls.college}</small>
+                </div>
+              </div>
+              <div className="text-end">
+                <div className="fw-semibold">{cls.time}</div>
+                <small className="text-muted">{cls.students} students</small>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderLiveSession = () => (
+    <div className="card">
+      <div className="card-body">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h5 className="card-title mb-0">
+            {isLive ? 'Live Session Active' : 'Start Live Session'}
+          </h5>
+          {isLive && (
+            <div className="d-flex align-items-center">
+              <div className="bg-danger rounded-circle me-2" style={{ width: '12px', height: '12px', animation: 'pulse 2s infinite' }}></div>
+              <span className="text-danger fw-semibold">LIVE</span>
+            </div>
+          )}
+        </div>
+
+        {isLive ? (
+          <div>
+            <div className="bg-dark rounded mb-4 d-flex align-items-center justify-content-center" style={{ aspectRatio: '16/9' }}>
+              <div className="text-center text-white">
+                <Video className="mb-3" size={64} />
+                <h5>Live Session in Progress</h5>
+                <p className="text-light">Connected to 45 students across 3 colleges</p>
+              </div>
+            </div>
+            
+            <div className="d-flex justify-content-center align-items-center mb-4">
+              <button 
+                onClick={() => setIsMuted(!isMuted)}
+                className={`btn me-3 ${isMuted ? 'btn-danger' : 'btn-secondary'}`}
+              >
+                {isMuted ? <MicOff size={20} /> : <Mic size={20} />}
+              </button>
+              
+              <button 
+                onClick={stopLiveSession}
+                className="btn btn-danger px-4"
+              >
+                End Session
+              </button>
+            </div>
+
+            <div className="row text-center">
+              <div className="col-md-4">
+                <div className="p-3 bg-primary bg-opacity-10 rounded">
+                  <h3 className="text-primary">45</h3>
+                  <small className="text-primary">Active Students</small>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="p-3 bg-success bg-opacity-10 rounded">
+                  <h3 className="text-success">3.2 Mbps</h3>
+                  <small className="text-success">Bandwidth Usage</small>
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="p-3 bg-info bg-opacity-10 rounded">
+                  <h3 className="text-info">23:45</h3>
+                  <small className="text-info">Session Duration</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center">
+            <div className="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style={{ width: '128px', height: '128px' }}>
+              <Video size={64} className="text-muted" />
+            </div>
+            <br />
+            <button 
+              onClick={startLiveSession}
+              className="btn btn-danger btn-lg px-5"
+            >
+              Start Live Session
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderContent = () => (
+    <div className="card">
+      <div className="card-header d-flex justify-content-between align-items-center">
+        <h5 className="card-title mb-0">Recent Recordings</h5>
+        <button className="btn btn-primary">Upload New</button>
+      </div>
+      <div className="card-body">
+        {recentSessions.map((session) => (
+          <div key={session.id} className="d-flex justify-content-between align-items-center p-3 border rounded mb-3">
+            <div className="d-flex align-items-center">
+              <div className="bg-primary bg-opacity-10 p-3 rounded me-3">
+                <Play className="text-primary" size={24} />
+              </div>
+              <div>
+                <h6 className="mb-1">{session.title}</h6>
+                <small className="text-muted">{session.date} • {session.duration} • {session.size}</small>
+              </div>
+            </div>
+            <div className="d-flex align-items-center">
+              <div className="text-end me-3">
+                <small className="fw-semibold">{session.views} views</small>
+              </div>
+              <button className="btn btn-link text-muted p-1">
+                <Download size={16} />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderStudents = () => (
+    <div className="card">
+      <div className="card-body">
+        <h5 className="card-title mb-4">Student Analytics</h5>
+        <div className="row">
+          <div className="col-md-4 mb-3">
+            <div className="p-4 bg-primary bg-opacity-10 rounded">
+              <h3 className="text-primary">1,247</h3>
+              <small className="text-primary">Total Enrolled</small>
+            </div>
+          </div>
+          <div className="col-md-4 mb-3">
+            <div className="p-4 bg-success bg-opacity-10 rounded">
+              <h3 className="text-success">89%</h3>
+              <small className="text-success">Attendance Rate</small>
+            </div>
+          </div>
+          <div className="col-md-4 mb-3">
+            <div className="p-4 bg-info bg-opacity-10 rounded">
+              <h3 className="text-info">76%</h3>
+              <small className="text-info">Completion Rate</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-100">
-
-      <main className="p-6 space-y-6">
-        <div className="bg-green-100 p-6 rounded shadow">
-          <h1 className="text-2xl font-bold">Welcome, {teacher.name}!</h1>
-          <p>Here’s what’s happening in your classes today.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* My Classes */}
-          <div className="bg-white p-6 rounded shadow">
-            <h2 className="font-semibold text-lg mb-3">My Classes</h2>
-            <ul>
-              {myClasses.map((cls, idx) => (
-                <li key={idx} className="py-1 border-b last:border-b-0">
-                  {cls.course} - {cls.time} ({cls.students} students)
-                </li>
-              ))}
-            </ul>
+    <div>
+      {/* <link 
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" 
+        rel="stylesheet" 
+      /> */}
+      
+      <div className="min-vh-100" style={{ backgroundColor: '#f8f9fa' }}>
+        {/* <TechNavbar 
+          teacher={teacher} 
+          onProfileClick={() => setIsProfileModalOpen(true)} 
+        /> */}
+        
+        <div className="container-fluid py-4">
+          {/* Welcome Section */}
+          <div className="mb-4">
+            <h1 className="display-5 fw-bold mb-2">
+              Welcome back, {teacher.name || 'Teacher'}!
+            </h1>
+            <p className="text-muted">
+              Empowering rural education through technology • {teacher.subject}
+            </p>
           </div>
 
-          {/* Assignments to Grade */}
-          <div className="bg-white p-6 rounded shadow">
-            <h2 className="font-semibold text-lg mb-3">Assignments to Grade</h2>
-            <ul>
-              {assignmentsToGrade.map((assign, idx) => (
-                <li key={idx} className="py-1 border-b last:border-b-0">
-                  {assign.title} - Due {assign.due}
-                </li>
-              ))}
-            </ul>
+          {/* Navigation Tabs */}
+          <div className="mb-4 pb-3 border-bottom">
+            <div className="d-flex flex-wrap">
+              <TabButton id="overview" label="Overview" icon={BarChart3} />
+              <TabButton id="live" label="Live Session" icon={Video} />
+              <TabButton id="content" label="Content" icon={FileText} />
+              <TabButton id="students" label="Students" icon={Users} />
+              <TabButton id="schedule" label="Schedule" icon={Calendar} />
+              <TabButton id="settings" label="Settings" icon={Settings} />
+            </div>
           </div>
+
+          {/* Tab Content */}
+          {activeTab === 'overview' && renderOverview()}
+          {activeTab === 'live' && renderLiveSession()}
+          {activeTab === 'content' && renderContent()}
+          {activeTab === 'students' && renderStudents()}
+          {activeTab === 'schedule' && (
+            <div className="card">
+              <div className="card-body text-center py-5">
+                <Calendar size={48} className="text-muted mb-3" />
+                <h5>Schedule Management</h5>
+                <p className="text-muted">Coming Soon - Schedule and manage your classes</p>
+              </div>
+            </div>
+          )}
+          {activeTab === 'settings' && (
+            <div className="card">
+              <div className="card-body text-center py-5">
+                <Settings size={48} className="text-muted mb-3" />
+                <h5>Settings</h5>
+                <p className="text-muted">Coming Soon - Customize your preferences</p>
+              </div>
+            </div>
+          )}
         </div>
-      </main>
+
+        {/* Profile Modal */}
+        {isProfileModalOpen && (
+          <TeachProfileModal 
+            teacher={teacher}
+            setTeacher={setTeacher}
+            setModalOpen={setIsProfileModalOpen}
+          />
+        )}
+      </div>
     </div>
   );
 };

@@ -4,7 +4,7 @@ function HomeContent() {
   return (
     <>
       {/* Hero Section with Gradient Background */}
-      <section className="bg-gradient-primary text-white text-center py-5" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
+      <section className="bg-gradient-primary text-white text-center py-5 mt-5" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-8">
@@ -441,7 +441,7 @@ function HomeContent() {
       </section>
 
       {/* Custom CSS for animations and hover effects */}
-      <style jsx>{`
+      <style>{`
         .hover-lift {
           transition: transform 0.3s ease, box-shadow 0.3s ease;
         }

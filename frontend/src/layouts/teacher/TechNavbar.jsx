@@ -1,64 +1,89 @@
-import React, { useState } from "react";
-import TeachProfileModal from "./TeachProfileModal";
+import React, { useState, useContext } from 'react';
+import server from "../../environment";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
-const TechNavbar = ({ teacher, setTeacher }) => {
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
+import { 
+  User, 
+  Video, 
+  Upload, 
+  Users, 
+  BookOpen, 
+  Calendar, 
+  Settings, 
+  Bell, 
+  Download,
+  Play,
+  Pause,
+  Mic,
+  MicOff,
+  Monitor,
+  FileText,
+  BarChart3,
+  Clock,
+  Wifi,
+  WifiOff
+} from 'lucide-react';
 
-  const handleLogout = () => {
-    console.log("Teacher logged out");
-    alert("Logged out!");
-    // implement real logout logic here
-  };
+
+// Teacher Navbar Component
+const TechNavbar = ({ teacher, onProfileClick }) => {
+  const [isConnected, setIsConnected] = useState(true);
 
   return (
-    <>
-      <nav className="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <div className="text-xl font-bold text-green-600">Teacher Dashboard</div>
-
-        <div className="flex items-center gap-6">
-          <div className="font-semibold hover:text-green-600 cursor-pointer">My Classes</div>
-          <div className="font-semibold hover:text-green-600 cursor-pointer">Assignments</div>
-          <div className="font-semibold hover:text-green-600 cursor-pointer">Schedule</div>
-
-          {/* Teacher Profile */}
-          <div
-            className="relative"
-            onMouseEnter={() => setProfileOpen(true)}
-            onMouseLeave={() => setProfileOpen(false)}
-          >
-            <div className="w-10 h-10 bg-green-500 text-white font-bold rounded-full flex items-center justify-center cursor-pointer">
-              {teacher?.profilePic ? (
-                <img src={teacher.profilePic} alt="avatar" className="w-10 h-10 rounded-full" />
-              ) : (
-                teacher.name.charAt(0).toUpperCase()
-              )}
-            </div>
-
-            {profileOpen && (
-              <ul className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded z-50">
-                <li
-                  className="px-4 py-2 hover:bg-green-100 cursor-pointer"
-                  onClick={() => setModalOpen(true)}
-                >
-                  Edit Profile
-                </li>
-                <li className="px-4 py-2 hover:bg-green-100 cursor-pointer">Change Picture</li>
-                <li className="px-4 py-2 hover:bg-green-100 cursor-pointer">Settings</li>
-                <li
-                  className="px-4 py-2 hover:bg-red-500 hover:text-white cursor-pointer"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </li>
-              </ul>
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm border-bottom">
+      <div className="container-fluid">
+        <div className="d-flex align-items-center">
+          <Monitor className="me-2 text-primary" size={32} />
+          <span className="navbar-brand mb-0 h1">Shiksha Setu</span>
+          <div className="d-none d-md-flex align-items-center ms-3">
+            {isConnected ? (
+              <Wifi className="me-1 text-success" size={16} />
+            ) : (
+              <WifiOff className="me-1 text-danger" size={16} />
             )}
+            <small className="text-muted">
+              {isConnected ? 'Connected' : 'Offline Mode'}
+            </small>
           </div>
         </div>
-      </nav>
 
-      {modalOpen && <TeachProfileModal teacher={teacher} setTeacher={setTeacher} setModalOpen={setModalOpen} />}
-    </>
+        <div className="d-flex align-items-center">
+          <div className="position-relative me-3">
+            <button className="btn btn-link text-muted p-2">
+              <Bell size={20} />
+              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                3
+              </span>
+            </button>
+          </div>
+          
+          <button 
+            className="btn btn-link text-decoration-none d-flex align-items-center p-2"
+            onClick={onProfileClick}
+          >
+            {teacher.profilePic ? (
+              <img 
+                src={teacher.profilePic} 
+                alt="Profile" 
+                className="rounded-circle me-2" 
+                style={{ width: '32px', height: '32px', objectFit: 'cover' }}
+              />
+            ) : (
+              <div 
+                className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
+                style={{ width: '32px', height: '32px', fontSize: '0.875rem' }}
+              >
+                {teacher.name?.charAt(0).toUpperCase() || 'T'}
+              </div>
+            )}
+            <span className="d-none d-md-block text-dark">
+              {teacher.name || 'Teacher'}
+            </span>
+          </button>
+        </div>
+      </div>
+    </nav>
   );
 };
 

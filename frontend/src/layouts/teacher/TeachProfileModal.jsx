@@ -1,12 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from 'react';
+import server from "../../environment";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
+import { 
+  User, 
+  Video, 
+  Upload, 
+  Users, 
+  BookOpen, 
+  Calendar, 
+  Settings, 
+  Bell, 
+  Download,
+  Play,
+  Pause,
+  Mic,
+  MicOff,
+  Monitor,
+  FileText,
+  BarChart3,
+  Clock,
+  Wifi,
+  WifiOff
+} from 'lucide-react';
+
+
+// Teacher Profile Modal Component
 const TeachProfileModal = ({ teacher, setTeacher, setModalOpen }) => {
+
+  // const navigate = useNavigate();
+
+
   const [name, setName] = useState(teacher.name || "");
   const [email, setEmail] = useState(teacher.email || "");
   const [profilePic, setProfilePic] = useState(teacher.profilePic || "");
+  const [subject, setSubject] = useState(teacher.subject || "");
+  const [experience, setExperience] = useState(teacher.experience || "");
 
   const handleSave = () => {
-    setTeacher({ ...teacher, name, email, profilePic });
+    setTeacher({ ...teacher, name, email, profilePic, subject, experience });
     setModalOpen(false);
   };
 
@@ -20,54 +53,99 @@ const TeachProfileModal = ({ teacher, setTeacher, setModalOpen }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded shadow-lg w-96 p-6 relative">
-        <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
-
-        <div className="flex flex-col items-center mb-4">
-          {profilePic ? (
-            <img src={profilePic} alt="Profile" className="w-24 h-24 rounded-full mb-2" />
-          ) : (
-            <div className="w-24 h-24 bg-green-500 text-white text-3xl rounded-full flex items-center justify-center mb-2">
-              {name.charAt(0).toUpperCase()}
+    <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Edit Profile</h5>
+            <button 
+              type="button" 
+              className="btn-close" 
+              onClick={() => setModalOpen(false)}
+            ></button>
+          </div>
+          <div className="modal-body">
+            <div className="text-center mb-4">
+              {profilePic ? (
+                <img 
+                  src={profilePic} 
+                  alt="Profile" 
+                  className="rounded-circle mb-2" 
+                  style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                />
+              ) : (
+                <div 
+                  className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mb-2 mx-auto"
+                  style={{ width: '100px', height: '100px', fontSize: '2rem' }}
+                >
+                  {name.charAt(0).toUpperCase() || 'T'}
+                </div>
+              )}
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleImageChange} 
+                className="form-control form-control-sm" 
+              />
             </div>
-          )}
-          <input type="file" onChange={handleImageChange} className="text-sm" />
-        </div>
 
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Name</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
+            <div className="mb-3">
+              <label className="form-label fw-semibold">Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="form-control"
+              />
+            </div>
 
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
-          />
-        </div>
+            <div className="mb-3">
+              <label className="form-label fw-semibold">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="form-control"
+              />
+            </div>
 
-        <div className="flex justify-end gap-2">
-          <button
-            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-            onClick={() => setModalOpen(false)}
-          >
-            Cancel
-          </button>
-          <button
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-            onClick={handleSave}
-          >
-            Save
-          </button>
+            <div className="mb-3">
+              <label className="form-label fw-semibold">Subject</label>
+              <input
+                type="text"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                className="form-control"
+                placeholder="e.g., Artificial Intelligence"
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label fw-semibold">Experience (years)</label>
+              <input
+                type="number"
+                value={experience}
+                onChange={(e) => setExperience(e.target.value)}
+                className="form-control"
+              />
+            </div>
+          </div>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setModalOpen(false)}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleSave}
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </div>
