@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import server from "../../environment";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import TechNavbar from './TechNavbar';
 
 import { 
@@ -29,7 +29,7 @@ import {
 
 // Main Teacher Dashboard Component
 const TechDashboard = () => {
-  const { userData } = useContext(AuthContext); // ✅ get user from context
+  const { userData  } = useAuth();
 
   const navigate = useNavigate();
 
@@ -377,7 +377,7 @@ const TechDashboard = () => {
           {/* Welcome Section */}
           <div className="mb-4">
             <h1 className="display-5 fw-bold mb-2">
-              Welcome back, {teacher.name || 'Teacher'}!
+              Welcome back, {userData.name || 'Teacher'}!
             </h1>
             <p className="text-muted">
               Empowering rural education through technology • {teacher.subject}

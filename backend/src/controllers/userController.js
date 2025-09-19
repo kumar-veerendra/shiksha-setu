@@ -27,7 +27,15 @@ const login = async (req, res) => {
       // Redirect based on role
       let redirect = user.role === "teacher" ? "/teacher-dashboard" : "/student-dashboard";
 
-      return res.status(httpStatus.OK).json({ token, role: user.role, redirect });
+      // return res.status(httpStatus.OK).json({ token, role: user.role, redirect });
+      return res.status(httpStatus.OK).json({
+        token,
+        role: user.role,
+        redirect,
+        username: user.username, // add this
+        name: user.name          // add this
+      });
+
     } else {
       return res.status(httpStatus.UNAUTHORIZED).json({ message: "Invalid username or password" });
     }

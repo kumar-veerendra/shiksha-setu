@@ -312,8 +312,11 @@
 import React, { useState, useEffect } from "react";
 import ProfileModal from "./ProfileModal";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const StuNavbar = ({ user, setUser }) => {
+  const { userData  } = useAuth();
+
   const [modalOpen, setModalOpen] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState("good");
   const [dataUsage, setDataUsage] = useState(15.2);
@@ -510,13 +513,13 @@ const StuNavbar = ({ user, setUser }) => {
                       className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold"
                       style={{width: "32px", height: "32px", fontSize: "0.9rem"}}
                     >
-                      {user?.name ? user.name.charAt(0).toUpperCase() : "S"}
+                      {userData?.name ? userData.name.charAt(0).toUpperCase() : "S"}
                     </div>
                   )}
                   
                   {/* User Name - Hidden on smaller screens */}
                   <span className="ms-2 d-none d-xl-inline fw-medium text-dark" style={{fontSize: "0.9rem"}}>
-                    {user?.name || "Student"}
+                    {userData?.name || "Student"}
                   </span>
                 </button>
 
@@ -539,12 +542,12 @@ const StuNavbar = ({ user, setUser }) => {
                             className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold me-3"
                             style={{width: "48px", height: "48px", fontSize: "1.2rem"}}
                           >
-                            {user?.name ? user.name.charAt(0).toUpperCase() : "S"}
+                            {userData?.name ? userData.name.charAt(0).toUpperCase() : "S"}
                           </div>
                         )}
                         <div>
-                          <div className="fw-bold text-dark">{user?.name || "Student Name"}</div>
-                          <small className="text-muted">{user?.email || "student@example.com"}</small>
+                          <div className="fw-bold text-dark">{userData?.name || "Student Name"}</div>
+                          <small className="text-muted">{userData?.username || "student@example.com"}</small>
                           <div>
                             <span className="badge bg-primary rounded-pill" style={{fontSize: "0.7rem"}}>
                               Student

@@ -47,6 +47,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+
   // LOGIN
   const handleLogin = async (username, password) => {
     try {
@@ -58,16 +60,28 @@ export const AuthProvider = ({ children }) => {
      // ✅ Log only data from backend
      console.log("Backend data:", request.data);
 
-      if (request.status === httpStatus.OK) {
-        const { token, role, redirect } = request.data;
+      // if (request.status === httpStatus.OK) {
+      //   const { token, role, redirect } = request.data;
 
-        const user = { username, role, token };
+      //   const user = { username, role, token };
+      //   setUserData(user);
+      //   localStorage.setItem("user", JSON.stringify(user));
+
+      //   // Redirect based on role with replace to fix back button issue
+      //   router(redirect, { replace: true });
+      // }
+
+      if (request.status === httpStatus.OK) {
+        const { token, role, redirect, username, name } = request.data;
+
+        const user = { token, role, username, name };
         setUserData(user);
         localStorage.setItem("user", JSON.stringify(user));
 
-        // Redirect based on role with replace to fix back button issue
         router(redirect, { replace: true });
       }
+
+
     } catch (err) {
         // Log the error response from backend
         console.log("Error response:", err.response?.data);
