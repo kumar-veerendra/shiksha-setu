@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import server from "../../environment";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 import { 
   User, 
@@ -28,6 +28,7 @@ import {
 
 // Teacher Navbar Component
 const TechNavbar = ({ teacher, onProfileClick }) => {
+  const { userData  } = useAuth();
   const [isConnected, setIsConnected] = useState(true);
 
   return (
@@ -74,11 +75,11 @@ const TechNavbar = ({ teacher, onProfileClick }) => {
                 className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2"
                 style={{ width: '32px', height: '32px', fontSize: '0.875rem' }}
               >
-                {teacher.name?.charAt(0).toUpperCase() || 'T'}
+                {userData.name?.charAt(0).toUpperCase() || 'T'}
               </div>
             )}
             <span className="d-none d-md-block text-dark">
-              {teacher.name || 'Teacher'}
+              {userData.name || 'Teacher'}
             </span>
           </button>
         </div>

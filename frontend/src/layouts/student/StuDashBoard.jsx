@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import server from "../../environment";
 import ChatBot from "./ChatBot";
+import { useAuth } from "../../context/AuthContext";
 
 const StuDashboard = ({ user }) => {
+  const { userData } = useAuth(); // contains token, role, username, name
+
   const [connectionStatus] = useState("good"); // good, poor, offline
   const [dataUsage] = useState(15.2);
   const [batteryLevel] = useState(78);
@@ -133,7 +136,7 @@ const StuDashboard = ({ user }) => {
               <div className="card-body text-white">
                 <div className="row align-items-center">
                   <div className="col-md-8">
-                    <h2 className="card-title mb-2">Welcome, {user?.name || "Student"}! 📚</h2>
+                    <h2 className="card-title mb-2">Welcome, {userData?.name || "Student"}! 📚</h2>
                     <p className="card-text mb-0">Rural Diploma College - Complete Learning Dashboard</p>
                   </div>
                   <div className="col-md-4 text-end">
@@ -167,31 +170,31 @@ const StuDashboard = ({ user }) => {
                     </button> */}
 
                     <button
-  className="btn btn-outline-primary btn-sm w-100"
-  onClick={async () => {
-    try {
-      const response = await fetch(`${server}/api/v1/meetings/active`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" }
-      });
+                      className="btn btn-outline-primary btn-sm w-100"
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`${server}/api/v1/meetings/active`, {
+                            method: "GET",
+                            headers: { "Content-Type": "application/json" }
+                          });
 
-      const data = await response.json();
+                          const data = await response.json();
 
-      if (data.success && data.meeting) {
-        // If there is an active meeting, join it
-        navigate(`/classroom/${data.meeting.meetingCode}`);
-      } else {
-        // No active meeting
-        alert("No class is started yet");
-      }
-    } catch (err) {
-      console.error("Error joining class:", err);
-      alert("Something went wrong while joining the class");
-    }
-  }}
->
-  📡 Join Live Class
-</button>
+                          if (data.success && data.meeting) {
+                            // If there is an active meeting, join it
+                            navigate(`/classroom/${data.meeting.meetingCode}`);
+                          } else {
+                            // No active meeting
+                            alert("No class is started yet");
+                          }
+                        } catch (err) {
+                          console.error("Error joining class:", err);
+                          alert("Something went wrong while joining the class");
+                        }
+                      }}
+                    >
+                      📡 Join Live Class
+                    </button>
 
                   </div>
 

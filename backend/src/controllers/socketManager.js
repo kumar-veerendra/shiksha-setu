@@ -73,7 +73,11 @@ export const connectToSocket = (server) => {
                 console.log("message", matchingRoom, ":", sender, data)
 
                 connections[matchingRoom].forEach((elem) => {
-                    io.to(elem).emit("chat-message", data, sender, socket.id)
+                    if (elem !== socket.id) {
+                        io.to(elem).emit("chat-message", data, sender, socket.id);
+                    }
+
+                    // io.to(elem).emit("chat-message", data, sender, socket.id)
                 })
             }
 
