@@ -1,5 +1,5 @@
 import { Server } from "socket.io"
-
+import { attachPollHandlers } from "./pollSocket.js"
 
 let connections = {}
 let messages = {}
@@ -114,6 +114,9 @@ export const connectToSocket = (server) => {
 
 
         })
+
+        // Attach poll handlers for this socket
+        attachPollHandlers(socket, connections);
 
 
     })
