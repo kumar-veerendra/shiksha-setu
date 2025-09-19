@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom';
 import io from "socket.io-client";
 import { Badge, IconButton, TextField } from '@mui/material';
 import { Button } from '@mui/material';
@@ -13,6 +14,9 @@ import StopScreenShareIcon from '@mui/icons-material/StopScreenShare'
 import ChatIcon from '@mui/icons-material/Chat'
 import server from '../environment';
 
+import { useAuth } from '../context/AuthContext';
+import PollComponent from './PollComponent ';
+
 const server_url = server;
 
 var connections = {};
@@ -24,11 +28,18 @@ const peerConfigConnections = {
 }
 
 export default function VideoMeetComponent() {
+    const chatContainerRef = useRef(null); // for automatic chat scroll
+    
+    const { meetingCode } = useParams();
+    const { userData  } = useAuth(); // user info
 
     var socketRef = useRef();
     let socketIdRef = useRef();
 
     let localVideoref = useRef();
+
+    let [userRole, setUserRole] = useState(""); // Add this to store user role
+
 
     let [videoAvailable, setVideoAvailable] = useState(true);
 
@@ -74,6 +85,21 @@ export default function VideoMeetComponent() {
         console.log("HELLO")
         getPermissions();
     }, []); // run only once
+
+
+    // chat scroll
+    useEffect(() => {
+        const container = chatContainerRef.current;
+        if (!container) return;
+
+        // Check if user is near the bottom (within 50px)
+        const isAtBottom =
+            container.scrollHeight - container.scrollTop - container.clientHeight < 50;
+
+        if (isAtBottom) {
+            container.scrollTop = container.scrollHeight; // Scroll to bottom
+        }
+    }, [messages]);
 
 
 
@@ -309,6 +335,7 @@ export default function VideoMeetComponent() {
         socketRef.current.on('signal', gotMessageFromServer)
 
         socketRef.current.on('connect', () => {
+            console.log("connection path :" ,window.location.href);
             socketRef.current.emit('join-call', window.location.href)
             socketIdRef.current = socketRef.current.id
 
@@ -603,7 +630,7 @@ export default function VideoMeetComponent() {
                         <div className={styles.chatContainer}>
                             <h1>Chat</h1>
 
-                            <div className={styles.chattingDisplay}>
+                            {/* <div className={styles.chattingDisplay}>
 
                                 {messages.length !== 0 ? messages.map((item, index) => {
 
@@ -617,7 +644,22 @@ export default function VideoMeetComponent() {
                                 }) : <p>No Messages Yet</p>}
 
 
+                            </div> */}
+
+                        
+                            <div className={styles.chattingDisplay} ref={chatContainerRef}>
+                                {messages.length !== 0 ? (
+                                    messages.map((item, index) => (
+                                    <div style={{ marginBottom: "20px" }} key={index}>
+                                        <p style={{ fontWeight: "bold" }}>{item.sender}</p>
+                                        <p>{item.data}</p>
+                                    </div>
+                                    ))
+                                ) : (
+                                    <p>No Messages Yet</p>
+                                )}
                             </div>
+
 
                             <div className={styles.chattingArea}>
                                 <TextField value={message} onChange={(e) => setMessage(e.target.value)}
@@ -666,6 +708,15 @@ export default function VideoMeetComponent() {
                             <IconButton onClick={handleScreen} style={{ color: "white" }}>
                                 {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
                             </IconButton> : <></>}
+
+                        
+                        {/* PollComponent */}
+                        <PollComponent 
+                            socketRef={socketRef} 
+                            username={userData?.name} 
+                            userRole={userData?.role} 
+                            meetingCode={meetingCode}
+                        />
 
                         <Badge badgeContent={newMessages} max={999} color='orange'>
                             <IconButton onClick={() => setModal(!showModal)} style={{ color: "white" }}>
