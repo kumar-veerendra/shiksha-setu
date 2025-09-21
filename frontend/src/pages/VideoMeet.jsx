@@ -14,6 +14,11 @@ import StopScreenShareIcon from '@mui/icons-material/StopScreenShare'
 import ChatIcon from '@mui/icons-material/Chat'
 import server from '../environment';
 
+// Add these imports for low bandwidth
+import TeacherUploadSlides from './TeacherUploadSlides'; // your existing component
+import StudentSlidesViewer from './StudentSlidesViewer';   // your existing component
+import SlideshowIcon from '@mui/icons-material/Slideshow';
+
 import { useAuth } from '../context/AuthContext';
 import PollComponent from './PollComponent ';
 
@@ -51,7 +56,7 @@ export default function VideoMeetComponent() {
 
     let [screen, setScreen] = useState(false);
 
-    let [showModal, setModal] = useState(true);
+    let [showModal, setModal] = useState(false);
 
     let [screenAvailable, setScreenAvailable] = useState();
 
@@ -68,6 +73,15 @@ export default function VideoMeetComponent() {
     const videoRef = useRef([])
 
     let [videos, setVideos] = useState([])
+
+
+    // Add these with your existing state declarations for low bandwidth optamization
+    let [slideMode, setSlideMode] = useState(false);
+    let [slides, setSlides] = useState([]);
+    let [currentSlide, setCurrentSlide] = useState(1);
+    let [presentationActive, setPresentationActive] = useState(false);
+
+
 
     // TODO
     // if(isChrome() === false) {
@@ -341,6 +355,31 @@ export default function VideoMeetComponent() {
 
             socketRef.current.on('chat-message', addMessage)
 
+
+
+            //low bandwidth
+            // ADD SLIDE LISTENERS HERE 👇
+            socketRef.current.on('slides-uploaded', ({ slides, currentSlide }) => {
+                setSlides(slides);
+                setCurrentSlide(currentSlide || 1);
+            });
+
+            socketRef.current.on('slide-changed', ({ slideIndex }) => {
+                setCurrentSlide(slideIndex);
+            });
+
+            socketRef.current.on('presentation-started', () => {
+                setPresentationActive(true);
+                setSlideMode(true); // Auto-open slides for students
+            });
+
+            socketRef.current.on('presentation-ended', () => {
+                setPresentationActive(false);
+            });
+            // END OF SLIDE LISTENERS 👆
+
+
+
             socketRef.current.on('user-left', (id) => {
                 setVideos((videos) => videos.filter((video) => video.socketId !== id))
             })
@@ -529,6 +568,16 @@ export default function VideoMeetComponent() {
         window.location.href = "/"
     }
 
+    // low bandwidth
+    // Add this function
+    let handleSlideToggle = (e) => {
+        e.preventDefault();
+        setSlideMode(!slideMode);
+        if (!slideMode) {
+            setNewMessages(0); // Reset chat badge when opening slides
+        }
+    }
+
     let openChat = () => {
         setModal(true);
         setNewMessages(0);
@@ -677,6 +726,64 @@ export default function VideoMeetComponent() {
                         </div>
                     </div> : <></>}
 
+                    {/* low bandwidth */}
+                    {/* ADD THIS NEW SLIDE PANEL */}
+                    
+                    {/* {slideMode ? (
+                        <div className={styles.chatRoom}>
+                            <div className={styles.chatContainer}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                    <h1>Slides</h1>
+                                    <Button onClick={() => setSlideMode(false)} size="small">Close</Button>
+                                </div>
+
+                                
+                                {console.log('Role check - userData?.role:', userData?.role)}
+                                {console.log('Is teacher?', userData?.role === 'teacher')}
+                                                    
+                                {userData?.role === 'teacher' ? (
+                                    
+                                    <TeacherUploadSlides 
+                                        roomId={meetingCode}
+                                        socket={socketRef.current}
+                                    />
+                                    
+                                ) : (
+                                    <StudentSlidesViewer 
+                                        roomId={meetingCode}
+                                        socket={socketRef.current}
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    ) : null} */}
+
+                        {/* full screen file */}
+                    {slideMode && (
+                        <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.8)" }}>
+                            <div className="modal-dialog modal-fullscreen">
+                                <div className="modal-content bg-dark text-white">
+                                    <div className="modal-header border-0">
+                                        <h5 className="modal-title">Slides</h5>
+                                        <button
+                                            type="button"
+                                            className="btn-close btn-close-white"
+                                            onClick={() => setSlideMode(false)}
+                                        ></button>
+                                        </div>
+                                        <div className="modal-body d-flex justify-content-center align-items-center">
+                                        {userData?.role === "teacher" ? (
+                                            <TeacherUploadSlides roomId={meetingCode} socket={socketRef.current} />
+                                        ) : (
+                                            <StudentSlidesViewer roomId={meetingCode} socket={socketRef.current} />
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+
 
                     <div className={styles.buttonContainers}>
                         <IconButton onClick={handleVideo} style={{ color: "white" }}>
@@ -717,6 +824,11 @@ export default function VideoMeetComponent() {
                             userRole={userData?.role} 
                             meetingCode={meetingCode}
                         />
+
+                        {/* // low bandwidth Add this button after the PollComponent and before the Chat badge */}
+                        <IconButton onClick={handleSlideToggle} style={{ color: slideMode ? "orange" : "white" }}>
+                            <SlideshowIcon />
+                        </IconButton>
 
                         <Badge badgeContent={newMessages} max={999} color='orange'>
                             <IconButton onClick={() => setModal(!showModal)} style={{ color: "white" }}>

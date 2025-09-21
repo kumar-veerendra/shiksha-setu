@@ -14,6 +14,13 @@ import { connectToSocket } from "./controllers/socketManager.js";
 import meetingRoutes from "./routes/meetings.routes.js";
 
 
+// for audio feature
+import slidesRoutes from "./routes/slides.routes.js";
+import path from "path";
+import fs from "fs";
+
+
+
 const app = express();
 const server = createServer(app);
 const io = connectToSocket(server);
@@ -27,6 +34,14 @@ app.use(express.urlencoded({limit: "40kb", extended: true}))
 app.use("/api/v1/users", userRoutes);
 
 app.use("/api/v1/meetings", meetingRoutes);
+
+
+
+// Serve uploads folder
+app.use("/uploads", express.static(path.join(".", "uploads")));
+
+// Mount slides routes
+app.use("/api/v1/slides", slidesRoutes);
 
 
 // app.get("/", (req, res) => {
