@@ -307,3 +307,12 @@
     padding: 20px;
     font-style: italic;
 }
+
+/* for file view*/
+.meetUserVideo img,
+.meetUserVideo iframe,
+.meetUserVideo div {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* keep aspect ratio */
+}

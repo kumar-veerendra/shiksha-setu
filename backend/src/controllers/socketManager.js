@@ -5,6 +5,9 @@ let connections = {}
 let messages = {}
 let timeOnline = {}
 
+let slideStorage = {}
+
+
 export const connectToSocket = (server) => {
     const io = new Server(server, {
         cors: {
@@ -117,6 +120,107 @@ export const connectToSocket = (server) => {
 
         // Attach poll handlers for this socket
         attachPollHandlers(socket, connections);
+
+
+
+        // ===== Add low-bandwidth listeners here =====
+
+        // Low-bandwidth quality updates
+        socket.on("quality-update", ({ roomId, userId, mode }) => {
+            io.to(roomId).emit("quality-update", { userId, mode });
+        });
+
+        // Slide sync (teacher shares compressed slides)
+        // socket.on("slides-update", ({ roomId, slides }) => {
+        //     io.to(roomId).emit("slides-update", { slides });
+        // });
+
+        // socket.on("slides-update", ({ roomId, slides }) => {
+        //     console.log(`Broadcasting slides to path ${roomId}`);
+        //     if (connections[roomId]) {
+        //         connections[roomId].forEach((socketId) => {
+        //             io.to(socketId).emit("slides-update", { slides });
+        //         });
+        //     }
+        // })
+
+        // socket.on("slides-update", ({ roomId, slides }) => {
+        //     console.log(`Broadcasting slides to roomId: ${roomId}`);
+            
+        //     // Try both the roomId and the full path
+        //     const possiblePaths = [
+        //         roomId, // "VDAMPJ"
+        //         `http://localhost:5173/classroom/${roomId}`, // Full URL
+        //         `/classroom/${roomId}` // Relative path
+        //     ];
+            
+        //     let found = false;
+        //     possiblePaths.forEach(path => {
+        //         console.log(`Checking connections for path: ${path}`);
+        //         console.log(`Connections available:`, Object.keys(connections));
+                
+        //         if (connections[path]) {
+        //             console.log(`Found ${connections[path].length} connections for path: ${path}`);
+        //             connections[path].forEach((socketId) => {
+        //                 if (socketId !== socket.id) {
+        //                     io.to(socketId).emit("slides-update", { slides });
+        //                     console.log(`Sent slides to socket: ${socketId}`);
+        //                     found = true;
+        //                 }
+        //             });
+        //         }
+        //     });
+            
+        //     if (!found) {
+        //         console.log(`No connections found for any path variations of: ${roomId}`);
+        //         console.log(`Available connection keys:`, Object.keys(connections));
+        //     }
+        // });
+
+
+
+        // Replace your slides-update handler with this:
+        socket.on("slides-update", ({ roomId, slides }) => {
+            console.log(`Broadcasting slides to roomId: ${roomId}`);
+            
+            // Store slides for this room
+            slideStorage[roomId] = slides;
+            
+            // Find the correct path - students join with full path like "/classroom/VDAMPJ"
+            const targetPath = `/classroom/${roomId}`;
+            
+            console.log(`Looking for connections at path: ${targetPath}`);
+            console.log(`Available connection keys:`, Object.keys(connections));
+            
+            if (connections[targetPath] && connections[targetPath].length > 0) {
+                console.log(`Found ${connections[targetPath].length} connections for path: ${targetPath}`);
+                
+                // Broadcast to all students in this room (exclude the sender)
+                connections[targetPath].forEach((socketId) => {
+                    if (socketId !== socket.id) {
+                        io.to(socketId).emit("slides-update", { slides });
+                        console.log(`Sent slides to socket: ${socketId}`);
+                    }
+                });
+                
+                console.log(`Successfully broadcasted slides to room: ${roomId}`);
+            } else {
+                console.log(`No connections found for path: ${targetPath}`);
+                console.log(`Available paths:`, Object.keys(connections));
+            }
+        });
+
+        // Add this handler to serve initial slides when students join
+        socket.on("getSlides", (roomId, callback) => {
+            console.log(`Student requesting slides for room: ${roomId}`);
+            
+            const currentSlides = slideStorage[roomId] || [];
+            console.log(`Sending ${currentSlides.length} slides to student`);
+            
+            if (callback && typeof callback === 'function') {
+                callback(currentSlides);
+            }
+        });
 
 
     })
