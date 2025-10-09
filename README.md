@@ -68,9 +68,10 @@ npm install
 
 # Start the backend server
 cd backend
-npm start
+npm run dev
 
 # Start the frontend server
 cd ../frontend
-npm start
+npm run dev
+
 
