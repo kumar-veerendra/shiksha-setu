@@ -58,7 +58,7 @@ Shiksha Setu is an AI-powered e-learning platform designed to bridge the educati
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/Shiksha-Setu.git
+git clone https://github.com/kumar-veerendra/shiksha-setu.git
 
 # Navigate to project directory
 cd Shiksha-Setu
@@ -73,3 +73,4 @@ npm start
 # Start the frontend server
 cd ../frontend
 npm start
+
