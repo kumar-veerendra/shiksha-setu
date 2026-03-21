@@ -18,7 +18,7 @@
 let IS_PROD = true;
 
 const server = IS_PROD
-  ? "https://shiksha-setu-production.up.railway.app/"
+  ? "https://shiksha-setu-production.up.railway.app"
   : "http://localhost:8000";
 
 export default server;
