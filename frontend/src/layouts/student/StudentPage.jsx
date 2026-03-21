@@ -1,5 +1,5 @@
 import React from 'react';
-import StuNavbar from './stuNavbar';
+import StuNavbar from './StuNavbar';
 import StuDashboard from './StuDashBoard';
 
 function StudentPage() {
