@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom';
 import io from "socket.io-client";
 import { Badge, IconButton, TextField } from '@mui/material';
@@ -37,6 +37,7 @@ export default function VideoMeetComponent() {
     
     const { meetingCode } = useParams();
     const { userData  } = useAuth(); // user info
+    console.log("User Info : ", userData);
 
     var socketRef = useRef();
     let socketIdRef = useRef();
@@ -44,6 +45,10 @@ export default function VideoMeetComponent() {
     let localVideoref = useRef();
 
     let [userRole, setUserRole] = useState(""); // Add this to store user role
+
+    let [teacherSocketId, setTeacherSocketId] = useState(null);
+
+    let [userNames, setUserNames] = useState({});
 
 
     let [videoAvailable, setVideoAvailable] = useState(true);
@@ -81,6 +86,17 @@ export default function VideoMeetComponent() {
     let [currentSlide, setCurrentSlide] = useState(1);
     let [presentationActive, setPresentationActive] = useState(false);
 
+
+
+
+    // Add this RIGHT AFTER all useState declarations and BEFORE useEffect hooks
+    const teacherVideo = useMemo(() => {
+        return videos.find(v => v.socketId === teacherSocketId);
+    }, [videos, teacherSocketId]);
+
+    const otherVideos = useMemo(() => {
+        return videos.filter(v => v.socketId !== teacherSocketId);
+    }, [videos, teacherSocketId]);
 
 
     // TODO
@@ -355,6 +371,10 @@ export default function VideoMeetComponent() {
 
             socketRef.current.on('chat-message', addMessage)
 
+            socketRef.current.on('user-info', ({ socketId, username, role }) => {
+                setUserNames(prev => ({ ...prev, [socketId]: { username, role } }));
+            });
+
 
 
             //low bandwidth
@@ -386,6 +406,11 @@ export default function VideoMeetComponent() {
 
             socketRef.current.on('user-joined', (id, clients) => {
                 clients.forEach((socketListId) => {
+
+                      // Add this RIGHT HERE (inside forEach, before connections line)
+                    if (socketListId === socketIdRef.current && userData?.role === 'teacher') {
+                        setTeacherSocketId(socketIdRef.current);
+                    }
 
                     connections[socketListId] = new RTCPeerConnection(peerConfigConnections)
                     // Wait for their ice candidate       
@@ -441,6 +466,28 @@ export default function VideoMeetComponent() {
                         connections[socketListId].addStream(window.localStream)
                     }
                 })
+
+
+                // ADD RIGHT HERE 👇 (before the next if statement)
+                if (id === socketIdRef.current) {
+                    socketRef.current.emit('send-user-info', {
+                        socketId: socketIdRef.current,
+                        username: userData?.name,
+                        role: userData?.role
+                    });
+                }
+
+
+                // Add this RIGHT HERE (after forEach ends)
+                if (id === socketIdRef.current && userData?.role === 'teacher') {
+                    setTimeout(() => {
+                        socketRef.current.emit('chat-message', 
+                            `__ROLE_TEACHER__${socketIdRef.current}`, 
+                            '__SYSTEM__'
+                        );
+                    }, 1000);
+                }
+
 
                 if (id === socketIdRef.current) {
                     for (let id2 in connections) {
@@ -600,13 +647,48 @@ export default function VideoMeetComponent() {
     //     }
     // };
 
+    // const addMessage = (data, sender, socketIdSender) => {
+    //     // Check if this exact message already exists (prevent duplicates)
+    //     setMessages((prevMessages) => {
+    //         const isDuplicate = prevMessages.some(msg => 
+    //             msg.sender === sender && 
+    //             msg.data === data && 
+    //             Math.abs(Date.now() - (msg.timestamp || 0)) < 2000 // Within 2 seconds
+    //         );
+            
+    //         if (isDuplicate) {
+    //             console.log("Duplicate message detected, ignoring");
+    //             return prevMessages;
+    //         }
+            
+    //         const newMessage = {
+    //             sender: sender,
+    //             data: data,
+    //             timestamp: Date.now()
+    //         };
+            
+    //         return [...prevMessages, newMessage];
+    //     });
+        
+    //     setNewMessages((prevNewMessages) => prevNewMessages + 1);
+    // };
+
+
     const addMessage = (data, sender, socketIdSender) => {
-        // Check if this exact message already exists (prevent duplicates)
+        // Check if this is a role announcement - FILTER IT OUT
+        if (data.startsWith('__ROLE_TEACHER__') && sender === '__SYSTEM__') {
+            const teacherSocket = data.replace('__ROLE_TEACHER__', '');
+            setTeacherSocketId(teacherSocket);
+            console.log('Teacher detected:', teacherSocket);
+            return; // Don't add to chat messages
+        }
+        
+        // Rest of your existing duplicate check code
         setMessages((prevMessages) => {
             const isDuplicate = prevMessages.some(msg => 
                 msg.sender === sender && 
                 msg.data === data && 
-                Math.abs(Date.now() - (msg.timestamp || 0)) < 2000 // Within 2 seconds
+                Math.abs(Date.now() - (msg.timestamp || 0)) < 2000
             );
             
             if (isDuplicate) {
@@ -838,10 +920,57 @@ export default function VideoMeetComponent() {
                     </div>
 
 
-                    <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted></video>
+                    {/* <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted></video> */}
+                    {/* {teacherSocketId && teacherSocketId !== socketIdRef.current ? (
+                        <video 
+                            className={styles.meetUserVideo} 
+                            ref={ref => {
+                                const teacherVideo = videos.find(v => v.socketId === teacherSocketId);
+                                if (ref && teacherVideo?.stream) {
+                                    ref.srcObject = teacherVideo.stream;
+                                }
+                            }}
+                            autoPlay
+                        ></video>
+                    ) : (
+                        <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted></video>
+                    )} */}
 
-                    <div className={styles.conferenceView}>
-                        {videos.map((video) => (
+                    {teacherSocketId && teacherSocketId !== socketIdRef.current ? (
+                        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                            <video 
+                                className={styles.meetUserVideo} 
+                                ref={ref => {
+                                    // const teacherVideo = videos.find(v => v.socketId === teacherSocketId);
+                                    // if (ref && teacherVideo?.stream) {
+                                    //     ref.srcObject = teacherVideo.stream;
+                                    // }
+
+                                    if (ref && teacherVideo?.stream && ref.srcObject !== teacherVideo.stream) {
+                                        ref.srcObject = teacherVideo.stream;
+                                    }
+                                }}
+                                autoPlay
+                            ></video>
+
+                            <div className={styles.mainVideoNameTag}>
+                                {userNames[teacherSocketId]?.username || 'Teacher'}
+                            </div>
+                        </div>
+                    ) : (
+                        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                            <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted></video>
+                            <div className={styles.mainVideoNameTag}>
+                                {userData?.name}
+                            </div>
+                        </div>
+                    )}
+
+
+
+                    {/* <div className={styles.conferenceView}>
+                        {/* {videos.map((video) => ( */}
+                        {/*{videos.filter(video => video.socketId !== teacherSocketId).map((video) => (
                             <div key={video.socketId}>
                                 <video
 
@@ -858,6 +987,27 @@ export default function VideoMeetComponent() {
 
                         ))}
 
+                    </div> */}
+
+                    <div className={styles.conferenceView}>
+                        {/* {videos.filter(video => video.socketId !== teacherSocketId).map((video) => ( */}
+                        {otherVideos.map((video) => (
+                            <div key={video.socketId} style={{ position: 'relative' }}>
+                                <video
+                                    data-socket={video.socketId}
+                                    ref={ref => {
+                                        if (ref && video.stream) {
+                                            ref.srcObject = video.stream;
+                                        }
+                                    }}
+                                    autoPlay
+                                >
+                                </video>
+                                <div className={styles.videoNameTag}>
+                                    {userNames?.username || 'Student'}
+                                </div>
+                            </div>
+                        ))}
                     </div>
 
                 </div>

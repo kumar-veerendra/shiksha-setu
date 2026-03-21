@@ -86,6 +86,28 @@ export const connectToSocket = (server) => {
 
         })
 
+
+        // ADD THIS NEW HANDLER RIGHT HERE 👇
+        socket.on("send-user-info", ({ socketId, username, role }) => {
+            // Find which room this socket is in
+            const [matchingRoom, found] = Object.entries(connections)
+                .reduce(([room, isFound], [roomKey, roomValue]) => {
+                    if (!isFound && roomValue.includes(socket.id)) {
+                        return [roomKey, true];
+                    }
+                    return [room, isFound];
+                }, ['', false]);
+
+            if (found === true) {
+                // Broadcast this user's info to everyone in the room
+                connections[matchingRoom].forEach((elem) => {
+                    io.to(elem).emit("user-info", { socketId, username, role });
+                });
+                console.log("User info broadcasted:", username, role, "in room:", matchingRoom);
+            }
+        });
+        
+
         socket.on("disconnect", () => {
 
             var diffTime = Math.abs(timeOnline[socket.id] - new Date())
