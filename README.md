@@ -1,3 +1,8 @@
+## 🌐 Live Demo
+
+👉 **Visit Shiksha Setu:**  
+[https://shiksha-setu-pied.vercel.app/](https://shiksha-setu-pied.vercel.app/)
+
 # Shiksha Setu – Remote Learning Platform
 
 Shiksha Setu is an AI-powered e-learning platform designed to bridge the educational gap in rural and low-bandwidth areas. It provides students with a seamless learning experience using intelligent content delivery, offline access, and adaptive learning technologies. The project focuses on accessibility, inclusivity, and personalization, ensuring that students with limited internet connectivity can still access quality education resources.
